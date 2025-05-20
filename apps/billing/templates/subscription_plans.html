@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Subscription Plans{% endblock  %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+    body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #1a1a3d 0%, #2a2a5e 100%);
+        color: #ffffff;
+    }
+    .plans-container {
+        text-align: center;
+        padding: 40px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .plans-container h1 {
+        font-size: 2.8rem;
+        font-weight: 800;
+        background: linear-gradient(45deg, #ff6f61, #ffb88c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 40px;
+    }
+    .plans {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+    }
+    .plan-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 30px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .plan-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(255, 111, 97, 0.3);
+    }
+    .plan-card.basic::before,
+    .plan-card.pro::before,
+    .plan-card.enterprise::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, rgba(255, 111, 97, 0.2), rgba(255, 184, 140, 0.2));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none; /* Added to allow clicks to pass through */
+    }
+    .plan-card:hover::before {
+        opacity: 1;
+    }
+    .plan-card h2 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin: 0;
+        color: #ffb88c;
+    }
+    .price {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 10px 0;
+        color: #ff6f61;
+    }
+    .features {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+        text-align: left;
+    }
+    .features li {
+        position: relative;
+        padding-left: 35px;
+        margin: 10px 0;
+        font-size: 0.9rem;
+    }
+    .features li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 2px;
+        width: 24px;
+        height: 24px;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23ff6f61" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>') no-repeat center;
+    }
+    .subscribe-button {
+        display: inline-block;
+        background: linear-gradient(45deg, #ff6f61, #ffb88c);
+        padding: 12px 24px;
+        border-radius: 25px;
+        color: #ffffff;
+        font-weight: 600;
+        text-decoration: none;
+        transition: transform 0.2s ease, background 0.3s ease;
+    }
+
+    .subscribe-button:hover {
+        background: linear-gradient(45deg, #ffb88c, #ff6f61);
+        transform: scale(1.05);
+    }
+    button {
+        background: linear-gradient(45deg, #ff6f61, #ffb88c);
+        border: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        color: #ffffff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease, background 0.3s ease;
+    }
+    button:hover {
+        background: linear-gradient(45deg, #ffb88c, #ff6f61);
+        transform: scale(1.05);
+    }
+    .toggle-container {
+        margin: 20px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .toggle-label {
+        margin: 0 15px;
+        font-size: 1rem;
+        color: #ffffff;
+    }
+    .toggle-switch {
+        position: relative;
+        width: 70px;
+        height: 34px;
+    }
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #333;
+        transition: 0.4s;
+        border-radius: 34px;
+        box-shadow: 0 0 10px rgba(255, 111, 97, 0.3);
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background: #ff6f61;
+        transition: 0.4s;
+        border-radius: 50%;
+    }
+    input:checked + .slider {
+        background: #ffb88c;
+    }
+    input:checked + .slider:before {
+        transform: translateX(36px);
+        background: #ff6f61;
+    }
+    @media (max-width: 768px) {
+        .plans {
+            grid-template-columns: 1fr;
+        }
+        .plan-card {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    }
+</style>
+
+<div class="plans-container">
+    <h1>Choose Your Plan</h1>
+    {% comment %} <div class="toggle-container">
+        <span class="toggle-label">Monthly</span>
+        <label class="toggle-switch">
+            <input type="checkbox">
+            <span class="slider"></span>
+        </label>
+        <span class="toggle-label">Yearly</span>
+    </div> {% endcomment %}
+    <div class="plans">
+      {% for plan in plans %}
+        <div class="plan-card basic">
+            <h2>{{plan.name}}</h2>
+            <p class="price">₹{{plan.price}}</p>
+            <ul class="features">
+                <li>Duration: {{plan.duration_days}} Days</li>
+                <li>{{plan.description}}</li>
+            </ul>
+            <a href="{% url 'add_to_cart' 'subscription' plan.id %}" class="subscribe-button">Subscribe</a>
+        </div>
+      {% endfor %}
+    </div>
+</div>
+
+{% endblock  %}

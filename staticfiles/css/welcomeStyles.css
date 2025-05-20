@@ -1,0 +1,181 @@
+.welcome-hero {
+    position: relative;
+    height: 100vh;
+    background: linear-gradient(to top, #800080, rgba(255, 0, 217, 0.393), rgba(0, 0, 0, 0)),
+                url("../images/infinityBackground.png") no-repeat center center;
+    background-size: contain;
+    display: flex;
+    align-items: center;
+    color: white;
+    text-align: right;
+    padding: 0 20px;
+  }
+  
+  .welcome-content {
+    z-index: 2;
+    text-align: left;
+  }
+  
+  .welcome-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.1));
+    z-index: 1;
+  }
+  
+  .welcome-content h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    letter-spacing: 1px;
+  }
+  .welcome-content p {
+    font-size: 1.5rem;
+  }
+
+  .welcome-content h1 u, .title h2, .title h3, .title p {
+    background: linear-gradient(to top, #ff01ff, #0e62ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-decoration: underline;
+  }
+
+  .title{
+    padding-top: 1rem;
+    text-align: center;
+  }
+  .title h2, .title h3, .title p {
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px;
+  }
+
+  .title h2{
+    font-size: 3rem;
+  }
+
+  .title h3{
+    font-size: 2.5rem;
+  }
+  
+  .tags-section{
+    background: linear-gradient(to top, #0e62ff33, #0e62ff5a, #ff01ff);
+  }
+  .featured-section{
+    background: linear-gradient(to top, rgba(0, 0, 0, 0), #800080, #800080)
+  }
+/* -------------------------------------------------------------------------------- */
+.preview-frame {
+  width: 500px;
+  height: 300px;
+  border: none;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.carousel-body {
+  height: 100vh;
+  padding-bottom: 5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1200px;
+}
+.carousel {
+  position: relative;
+  width: 300px;
+  height: 200px;
+  transform-style: preserve-3d;
+}
+.rotating-panels {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  animation: rotate 40s infinite linear;
+}
+.panel {
+  position: absolute;
+  width: 300px;
+  height: 200px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.panel iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.infinity-logo {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-size: contain;
+  opacity: 0.8;
+  animation: pulse 2s infinite ease-in-out;
+}
+.center-image {
+  position: absolute;
+  top: 0%;
+  left: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  background-size: cover;
+  border-radius: 50%;
+  z-index: 10;
+  animation: float 3s infinite ease-in-out;
+}
+@keyframes rotate {
+  from { transform: rotateX(-15deg) rotateY(0deg); }
+  to { transform: rotateX(-15deg) rotateY(360deg); }
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+@keyframes float {
+  0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+  50% { transform: translate(-50%, -50%) translateY(-10px); }
+}
+
+.container-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+.flow-container {
+  display: flex;
+  white-space: nowrap;
+  width: 200%; /* Double width for seamless looping */
+  animation: scroll-clockwise 30s linear infinite;
+}
+.flow-container.reverse {
+  animation: scroll-anticlockwise 30s linear infinite;
+}
+.flow-container:hover {
+  animation-play-state: paused; /* Pause animation on hover */
+}
+.word-div {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 5px;
+  background: #53535359;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+}
+@keyframes scroll-clockwise {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* Move half the width */
+}
+@keyframes scroll-anticlockwise {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}

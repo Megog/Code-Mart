@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/welcomeStyles.css' %}">
+
+<div class="welcome-hero">
+  <div class="welcome-content orbitron-header">
+      <h1>Lorem ipsum dolor sit amet<br>
+        consectetur adipisicing <br><u><b> Code Mart </b></u>
+      </h1>
+      <p>Discover. Download. Develope.</p>
+  </div>
+</div>
+
+<div class="featured-section pb-4">
+  <div class="title">
+  <h2><b>Latest Uploads</b></h2>
+  </div>
+  <div class="carousel-body">
+      <div class="carousel">
+          <div class="rotating-panels">
+              {% for code in codes|slice:9 %}
+                <div class="panel">
+                  <iframe id="preview{{ code.id }}" width="100%" height="400"></iframe>
+                
+                  <script>
+                      (function() {
+                        const iframe = document.getElementById("preview{{ code.id }}");
+                      
+                        const html = `{{ code.html_code|escapejs }}`;
+                        const css = `{{ code.css_code|escapejs }}`;
+                        const js = `{{ code.js_code|escapejs }}`;
+                      
+                        const finalDoc = `
+                        <html>
+                          <head>
+                            <style>
+                              html, body {
+                                margin: 0;
+                                padding: 0;
+                                height: 100%;
+                                overflow: auto;
+                                scrollbar-width: none; /* Firefox */
+                              }
+                                          
+                              body::-webkit-scrollbar {
+                                display: none; /* Chrome, Safari */
+                              }
+                                          
+                              body {
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                min-height: 100vh;
+                              }
+                                          
+                              * {
+                                max-width: 100%;
+                                box-sizing: border-box;
+                              }
+                                          
+                              img, video, canvas {
+                                max-width: 100%;
+                                height: auto;
+                              }
+                                          
+                              ${css}
+                            </style>
+                          </head>
+                          <body>
+                            ${html}
+                            <script>
+                              ${js}
+                            <\/script>
+                          </body>
+                        </html>`;
+                      
+                        iframe.addEventListener("load", () => {
+                          const doc = iframe.contentDocument || iframe.contentWindow.document;
+                          doc.open();
+                          doc.write(finalDoc);
+                          doc.close();
+                        });
+                      
+                        iframe.src = "about:blank"; // Trigger the load event
+                      })();
+                    </script>
+                    
+                </div>
+              {% endfor %}
+                        
+          </div>
+          <div class="center-image"><img src="{% static 'images/infinity.png' %}" width="500px" height="auto" alt=""></div>
+      </div>
+  </div>
+</div>
+
+<div class="tags-section pb-5">
+<div class="title">
+  <h2><b>Tag's</b></h2>
+</div>
+<div class="container-wrapper mt-3">
+  <div class="flow-container" id="wordContainer1"></div>
+  <div class="flow-container reverse" id="wordContainer2"></div>
+  <div class="flow-container" id="wordContainer3"></div>
+</div>
+</div>
+
+<section class="py-5 pt-2 bg-dark">
+  <div class="container px-4">
+    <div class="title display-4 fw-bold text-center mb-5">
+      <h2><b>What Our Users Say</b></h2>
+      </div>
+      <div class="row row-cols-1 row-cols-md-2 g-4">
+          <div class="col">
+              <div class="card bg-primary text-white h-100">
+                  <div class="card-body p-4">
+                      <p class="text-wtite mb-3">"This platform made selling my digital art so easy!"</p>
+                      <p class="fw-semibold">AshishDK, Developer</p>
+                  </div>
+              </div>
+          </div>
+          <div class="col">
+              <div class="card bg-primary text-white h-100">
+                  <div class="card-body p-4">
+                      <p class="text-white mb-3">"Found amazing UI/UX Contents for my projects."</p>
+                      <p class="fw-semibold">Vipul98, Customer</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+<section class="py-5 bg-gradient-to-r from-primary to-purple text-center">
+  <div class="container px-4">
+    <div class="title">
+      <h2 class="display-4 fw-bold mb-4">Ready to Join the Community?</h2>
+      <p class="fs-4 mb-4">Sign up now to explore or create fascinating content.</p>
+      <a href="{% url 'signup' %}" class="btn btn-primary px-4 py-2 rounded-pill fs-5">Get Started</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const words = [
+      'Buttons', 'Checkbox', 'Cards', 'Inputs', 'Modals', 'Dropdown', 'Modal', 'Accordion', 'Hover', 'Responsive',
+      'Navbars', 'Sliders', 'Toggles', 'Alerts', 'Tabs', 'Switch', 'Icon', 'Form', 'Input'
+  ];
+  
+  const extendedWords = [...words, ...words, ...words, ...words];
+  function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+  }
+  function populateContainer(containerId) {
+      const container = document.getElementById(containerId);
+      extendedWords.forEach(word => {
+          const div = document.createElement('div');
+          div.className = 'word-div';
+          div.textContent = word;
+          div.style.color = getRandomColor();
+          container.appendChild(div);
+      });
+  }
+  populateContainer('wordContainer1');
+  populateContainer('wordContainer2');
+  populateContainer('wordContainer3');
+
+  const items = document.querySelectorAll('.panel');
+  const totalItems = items.length;
+  const angle = 360 / totalItems;
+
+  items.forEach((item, index) => {
+      item.style.transform = `rotateY(${angle * index}deg) translateZ(450px)`;      
+  });
+
+  const rotatingPanels = document.querySelector('.rotating-panels');
+  rotatingPanels.addEventListener('mouseenter', () => {
+      rotatingPanels.style.animationPlayState = 'paused';
+  });
+  rotatingPanels.addEventListener('mouseleave', () => {
+      rotatingPanels.style.animationPlayState = 'running';
+  });
+</script>
+
+
+{% endblock %}

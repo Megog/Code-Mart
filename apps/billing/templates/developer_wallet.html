@@ -1,0 +1,70 @@
+{% extends 'base_dash.html' %}
+
+{% load static %}
+
+{% block title %}Wallet / Balance History{% endblock  %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/developer_wallet.css' %}">
+
+<h1 class="subscription-header pt-4 ps-5">
+    WALLET
+</h1>
+<div class="subscription-container">
+    <div class="subscription-card">
+        <div class="subscription-tier">Available Balance :</div>
+        <div class="price-highlight">₹ {{ wallet.balance }}</div>
+        <button class="manage-button">
+            Widrawl Balance
+        </button>
+    </div>
+</div>
+<div class="container">
+    <h1>Balance History</h1>
+    
+    <div class="order-list">
+        {% for transaction in transactions %}
+            <div class="order-item">
+                <div class="code-content">{{ transaction.customer.username }}: {{ transaction.description }} #{{ transaction.code_content.title }}  </div>
+                <div class="purchase-date">{{ transaction.created_at|date:"Y-m-d H:i" }}</div>
+                <div class="price">₹{{ transaction.amount }}</div>
+                <div class="subscription-badge">{{ transaction.status }}</div>
+            </div>
+        {% empty %}
+            <div class="order-item">
+                <div class="code-content">No Profit yet.</div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% comment %} <h2>Your Wallet</h2>
+<p>Total Available Balance: ₹{{ wallet.balance }}</p>
+
+<h3>Transaction History</h3>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Code Purchased</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions %}
+        <tr>
+            <td>{{ transaction.customer.username }}</td>
+            <td>{{ transaction.code_content.title }}</td>
+            <td>₹{{ transaction.amount }}</td>
+            <td>{{ transaction.status }}</td>
+            <td>{{ transaction.created_at|date:"Y-m-d H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No transactions yet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table> {% endcomment %}
+{% endblock %}

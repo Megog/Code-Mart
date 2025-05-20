@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} {{code.title }} by @{{code.developer.username}} {% endblock  %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/code_live_preview_home.css' %}">
+
+<div class="d-flex justify-content-center">
+    <div class="container " {% if code.price == 0.00 and code.html_code %} style="width: 50%;" {% else %} style="width: 65%;" {% endif %}>
+
+        <div class="l-p-card" style="width: 100%; height: auto;">
+            <div class="l-p-card-header">
+                <div class="mac-header">
+                  <span class="red"></span>
+                  <span class="yellow"></span>
+                  <span class="green"></span>
+                </div>
+                <div class="d-flex justify-content-between align-item-center mt-4">
+                    <span class="l-p-card-title">{{ code.title }} by @{{ code.developer.username }}</span>
+                    <a href="{% url 'initiate_chat' code_id=code.id %}">
+                        <span class="l-p-card-tag hover-glow-golden" style="background-color: white; color: rgb(255, 215, 0); font-size: 12px;">
+                            <b>👑 Request Modification</b>
+                        </span>
+                    </a>
+                </div>
+                <div class="d-flex justify-content-between align-item-center">
+                  <p class="l-p-card-description">
+                    {{ code.description|truncatechars:80 }}
+                  </p>
+                  <a href="{% url 'add_to_cart' 'code' code.id %}">
+                    {% if user.is_authenticated %}
+                      <span class="l-p-card-tag" style="background-color: blue; color: white; font-size: 12px;">
+                          <b><i class="bi bi-cart-plus"></i> Add to Cart</b>
+                      </span>
+                    {% else %}
+                      <span class="l-p-card-tag" style="background-color: blue; color: white; font-size: 12px;">
+                        <b><i class="bi bi-bag-fill"></i> Buy Now</b>
+                      </span>
+                    {% endif %}
+                  </a>
+              </div>              
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="l-p-card-tag">Category: {{ code.get_category_display }}</span><br>
+                        <span class="l-p-card-tag">{% if code.price == 0.00 %} Free {% else %}Price: ₹{{ code.price }} {% endif %}</span>
+                    </div>
+                    <div class="me-5">
+                        <span class="l-p-card-tag">Difficulty: {{ code.get_difficulty_display }}</span><br><br>
+                    </div>
+                </div>
+            </div>
+            <div class="l-p-code-editor" style="max-height: 100vh;">
+            
+                <iframe id="preview{{ code.id }}" width="100%" height="400px" style="border:1px solid #ccc;"></iframe>
+            
+            </div>
+            <div class="d-flex align-items-center mt-3">
+                <span class="l-p-card-tag">Uploaded on {{ code.created_at|date:"F j, Y" }}</span>&nbsp;&nbsp;
+                <span class="l-p-card-tag">Last updated {{ code.updated_at|date:"F j, Y" }}</span>
+            </div>
+        </div>
+
+    </div>
+
+    {% if code.price == 0.00 and code.html_code %}
+        <div class="container" style="width: 50%; height: auto;">
+            {% if code.html_code %}
+            <div class="l-p-card mb-3" style="width: 100%;">
+                <div class="mac-header">
+                  <span class="red"></span>
+                  <span class="yellow"></span>
+                  <span class="green"></span>
+                </div>
+                
+                <div class="d-flex align-items-center justify-content-between">
+                    <span class="l-p-card-title">HTML</span>
+                    <button class="copy_btn" onclick="copyToClipboard('htmlCode', this)">
+                        <span>
+                            <i class="fa-regular fa-clipboard"></i>
+                            Copy
+                        </span>
+                        <span>Copied</span>
+                    </button>
+                </div>
+                
+                <div class="code-editor p-3 pb-0" style="background-color: black; color: white;">
+                  <pre><code id="htmlCode">{{ code.html_code }}</code></pre>
+                </div>
+            </div>
+            {% endif %}
+            {% if code.css_code %}
+            <div class="l-p-card mb-3" style="width: 100%;">
+                <div class="mac-header">
+                  <span class="red"></span>
+                  <span class="yellow"></span>
+                  <span class="green"></span>
+                </div>
+                
+                <div class="d-flex align-items-center justify-content-between">
+                    <span class="l-p-card-title">CSS</span>
+                    <button class="copy_btn" onclick="copyToClipboard('cssCode', this)">
+                        <span>
+                            <i class="fa-regular fa-clipboard"></i>
+                            Copy
+                        </span>
+                        <span>Copied</span>
+                    </button>
+                </div>
+                
+                <div class="code-editor p-3 pb-0" style="background-color: black; color: white;">
+                  <pre><code id="cssCode">{{ code.css_code }}</code></pre>
+                </div>
+            </div>
+            {% endif %}
+            {% if code.js_code %}
+            <div class="l-p-card" style="width: 100%;">
+                <div class="mac-header">
+                  <span class="red"></span>
+                  <span class="yellow"></span>
+                  <span class="green"></span>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between">
+                    <span class="l-p-card-title">JS</span>
+                    <button class="copy_btn" onclick="copyToClipboard('jsCode', this)">
+                        <span>
+                            <i class="fa-regular fa-clipboard"></i>
+                            Copy
+                        </span>
+                        <span>Copied</span>
+                    </button>
+                </div>
+                
+                <div class="code-editor p-3 pb-0" style="background-color: black; color: white;">
+                  <pre><code id="jsCode">{{ code.js_code }}</code></pre>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    (function() {
+        const iframe = document.getElementById("preview{{ code.id }}");
+    
+        const html = `{{ code.html_code|escapejs }}`;
+        const css = `{{ code.css_code|escapejs }}`;
+        const js = `{{ code.js_code|escapejs }}`;
+    
+        const finalDoc = `
+        <html>
+          <head>
+            <style>
+              html, body {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+                overflow: auto;
+                scrollbar-width: none; /* Firefox */
+              }
+                          
+              body::-webkit-scrollbar {
+                display: none; /* Chrome, Safari */
+              }
+                          
+              body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+              }
+                          
+              * {
+                max-width: 100%;
+                box-sizing: border-box;
+              }
+                          
+              img, video, canvas {
+                max-width: 100%;
+                height: auto;
+              }
+                          
+              ${css}
+            </style>
+          </head>
+          <body>
+            ${html}
+            <script>
+              ${js}
+            <\/script>
+          </body>
+        </html>`;
+    
+        iframe.addEventListener("load", () => {
+          const doc = iframe.contentDocument || iframe.contentWindow.document;
+          doc.open();
+          doc.write(finalDoc);
+          doc.close();
+        });
+    
+        iframe.src = "about:blank"; // Trigger the load event
+      })();
+
+    {% comment %} --------------------- Copy to clipboard -------------------- {% endcomment %}
+
+    function copyToClipboard(elementId, button) {
+        const codeBlock = document.getElementById(elementId);
+    
+        const text = codeBlock.innerText || codeBlock.textContent;
+        const tempTextArea = document.createElement("textarea");
+        tempTextArea.value = text;
+        document.body.appendChild(tempTextArea);
+        tempTextArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempTextArea);
+    
+        button.focus();
+    
+        setTimeout(() => {
+            button.blur();
+        }, 1500);
+    }
+    
+</script>
+
+{% endblock %}
+

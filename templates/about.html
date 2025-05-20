@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}About Us{% endblock %}
+{% block content %}
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h1 class="display-5 fw-bold">About <span class="text-primary">Digital Content Marketplace</span></h1>
+    <p class="lead text-muted">Empowering Developers. Inspiring Customers.</p>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <p class="fs-5">At <strong>Digital Content Marketplace</strong>, we bridge the gap between creators and consumers of high-quality digital assets. Whether you're a developer looking to monetize your code or a customer in search of powerful, ready-to-use solutions – you're in the right place.</p>
+      <p class="fs-5">Our mission is simple: <em>Empower innovation</em>, support creators, and make digital content accessible and trustworthy.</p>
+      <div class="text-center mt-4">
+        <a href="{% url 'contact' %}" class="btn btn-outline-primary btn-lg">Get in Touch</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

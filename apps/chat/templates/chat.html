@@ -1,0 +1,225 @@
+{% extends 'base_dash.html' %}
+{% load static mathfilters %}
+
+{% block title %}Chat - {{ thread.customer.username }} & {{ thread.developer.username }}{% endblock  %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/developer_wallet.css' %}">
+
+<div class="whatsapp-container" style="height: auto; min-height: 80vh; display: flex; flex-direction: column; color: #E9ECEF;">
+    <!-- Header -->
+    <div class="whatsapp-header" style="padding: 10px 15px; display: flex; align-items: center; border-bottom: 1px solid #2A3942;">
+        <div style="flex-grow: 1;">
+            <h2 style="margin: 0; font-size: 18px; color: #E9ECEF;">{{ thread.code_content.title }}</h2>
+            <p style="margin: 0; font-size: 12px; color: #8696A0;">{{ thread.customer.username }} & {{ thread.developer.username }}</p>
+        </div>
+    </div>
+
+    <!-- Messages Area -->
+    <div class="whatsapp-messages" style="flex-grow: 1; overflow-y: auto; padding: 15px;">
+        {% for message in chat_messages %}
+            <div style="display: flex; justify-content: {% if message.sender == request.user %}flex-end{% else %}flex-start{% endif %}; margin-bottom: 10px;">
+                <div class="order-item" style="max-width: 70%; min-width: 10%; padding: 10px; border-radius: 8px; color: #E9ECEF; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+                    {% if message.sender != request.user %}
+                        <div class="price">
+                            {{ message.sender.username|capfirst }}
+                        </div>
+                    {% endif %}
+                    
+                    <p class="code-content" style="margin: 0; font-size: 14px;">{{ message.message }}</p>
+                    
+                    {% if message.attachment %}
+                        <a href="{{ message.attachment.url }}" target="_blank" style="color: #00A884; text-decoration: none;">Attachment</a>
+                    {% endif %}
+                    
+                    <span style="font-size: 10px; color: #8696A0; display: block; text-align: right;">
+                        {{ message.sent_at|date:"H:i" }}
+                        &nbsp;&nbsp;
+                        {% if message.sender == request.user %}
+                            {% if message.is_read %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" style="color:rgb(0, 213, 255);" viewBox="0 0 16 16">
+                                    <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
+                                    <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"/>
+                                </svg>
+                            {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
+                                    <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
+                                    <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"/>
+                                </svg>
+                            {% endif %}
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Action Section -->
+    <div class="action-section" style="background-color: #202C33; border-top: 1px solid #2A3942;">
+        <!-- Developer Sets Initial Price -->
+        {% if request.user == thread.developer and mod_request.status == 'pending' %}
+            <form method="post" style="margin: 10px;">
+                {% csrf_token %}
+                <input type="number" name="price" placeholder="Set price (₹)" step="0.01" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #2A3942; background-color: #2A3942; color: #E9ECEF;">
+                <button type="submit" name="set_price" style="background-color: #00A884; color: #E9ECEF; border: none; padding: 8px 15px; border-radius: 5px; margin-top: 5px;">Propose Price</button>
+            </form>
+        {% endif %}
+
+        <!-- Customer Negotiates -->
+        {% if request.user == thread.customer and mod_request.status == 'negotiating' %}
+            <p style="color: #E9ECEF; margin: 10px;">Proposed Price: ₹{{ mod_request.proposed_price|floatformat:2 }}{% if mod_request.counter_price %} | Your Counter: ₹{{ mod_request.counter_price|floatformat:2 }}{% endif %}</p>
+            <form method="post" style="margin: 10px;">
+                {% csrf_token %}
+                <input type="number" name="counter_price" placeholder="Counter-offer (₹)" step="0.01" max="{{ mod_request.proposed_price }}" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #2A3942; background-color: #2A3942; color: #E9ECEF;">
+                <button type="submit" name="counter_price" style="background-color: #00A884; color: #E9ECEF; border: none; padding: 8px 15px; border-radius: 5px; margin-top: 5px;">Counter Price</button>
+            </form>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="accept_proposed" style="margin: 10px; background-color: #00A884; color: #E9ECEF; border: none; padding: 8px 15px; border-radius: 5px;">Accept Proposed Price</button>
+            </form>
+        {% endif %}
+
+        <!-- Developer Responds to Counter -->
+        {% if request.user == thread.developer and mod_request.status == 'negotiating' and mod_request.counter_price %}
+            <p style="color: #E9ECEF; margin: 10px;">Proposed: ₹{{ mod_request.proposed_price|floatformat:2 }} | Customer Counter: ₹{{ mod_request.counter_price|floatformat:2 }}</p>
+            <form method="post" style="margin: 10px;">
+                {% csrf_token %}
+                <input type="number" name="price" placeholder="New price (₹)" step="0.01" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #2A3942; background-color: #2A3942; color: #E9ECEF;">
+                <button type="submit" name="set_price" style="background-color: #00A884; color: #E9ECEF; border: none; padding: 8px 15px; border-radius: 5px; margin-top: 5px;">Propose New Price</button>
+                <button type="submit" name="confirm_counter" style="background-color: #00A884; color: #E9ECEF; border: none; padding: 8px 15px; border-radius: 5px; margin-top: 5px;">Accept Counter</button>
+                <button type="submit" name="decline_deal" style="background-color: #FF6B6B; color: #E9ECEF; border: none; padding: 8px 15px; border-radius: 5px; margin-top: 5px;">Decline Deal</button>
+            </form>
+        {% endif %}
+
+        <!-- Customer Pays Advance -->
+        {% if request.user == thread.customer and mod_request.status == 'price_confirmed' and not mod_request.advance_payment %}
+            <p style="color: #E9ECEF; margin: 10px;">Confirmed Price: ₹{{ mod_request.final_price|floatformat:2 }} | Advance: ₹{{ advance_amount|floatformat:2 }}</p>
+            <p style="color: #E9ECEF; margin: 10px;">Your Wallet Balance: ₹{{ wallet_balance|floatformat:2 }}</p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="pay_advance" style="margin: 10px; background-color: #00A884; color: #E9ECEF; border: none; padding: 8px 15px; border-radius: 5px;">Pay Advance</button>
+            </form>
+        {% endif %}
+
+        <!-- Developer Uploads Modified Code -->
+        {% if request.user == thread.developer and mod_request.status == 'advance_paid' %}
+            <p style="color: #E9ECEF; margin: 10px;">Advance Payment Received: ₹{{ mod_request.advance_payment|floatformat:2 }}</p>
+            <h6 style="color: #E9ECEF; margin: 10px;">Note:</h6>
+            <ul>
+                <li>
+                    <p style="color: #E9ECEF; margin: 10px;">Code must be compressed in a zip file!</p>
+                </li>
+                <li>
+                    <p style="color: #E9ECEF; margin: 10px;">Zip file must contail a <b style="color: red;">index.html* - (Mandatory)</b>, <b style="color: yellow;">styles.html - (if needed)</b>, <b style="color: yellow;">index.js - (if needed)</b>!</p>
+                </li>
+                <li>
+                    <p style="color: #E9ECEF; margin: 10px;">File name must be same as mentioned above!</p>
+                </li>
+            </ul>
+            <form method="post" enctype="multipart/form-data" style="margin: 10px;">
+                {% csrf_token %}
+                <input type="file" name="attachment" accept=".zip" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #2A3942; background-color: #2A3942; color: #E9ECEF;">
+                <button type="submit" name="upload_code" style="background-color: #00A884; color: #E9ECEF; border: none; padding: 8px 15px; border-radius: 5px; margin-top: 5px;">Upload Modified Code</button>
+            </form>
+        {% endif %}
+
+        <!-- Customer Preview & Dispute Section -->
+        {% if request.user == thread.customer and mod_request.status == 'code_delivered' %}
+            <p style="color: #E9ECEF; margin: 10px;">Advance Paid: ₹{{ mod_request.advance_payment|floatformat:2 }} | Remaining: ₹{{ remaining_amount|floatformat:2 }}</p>
+            <p style="color: #E9ECEF; margin: 10px;">Your Wallet Balance: ₹{{ wallet_balance|floatformat:2 }}</p>
+            <p id="attemptsLeft" style="color: #E9ECEF; margin: 10px;">Preview the modified code (Attempts left: {{ 3|sub:mod_request.customer_preview_count }}):</p>
+            <button id="previewButton" type="button" class="btn btn-primary" {% if mod_request.customer_preview_count >= 3 %}disabled{% endif %}>View Preview</button>
+            <form method="post" style="display: inline; margin-left: 10px;">
+                {% csrf_token %}
+                <button type="submit" name="confirm_satisfaction" class="btn btn-success">Satisfied (Pay ₹{{ remaining_amount|floatformat:2 }})</button>
+            </form>
+            <form method="post" style="display: inline; margin-left: 10px;">
+                {% csrf_token %}
+                <textarea name="dispute_reason" placeholder="Reason for dispute" required style="width: 300px; height: 50px; border-radius: 5px; border: 1px solid #2A3942; background-color: #2A3942; color: #E9ECEF; padding: 8px;"></textarea>
+                <button type="submit" name="raise_dispute" class="btn btn-danger" style="margin-top: 5px;">Dispute</button>
+            </form>
+            <iframe id="previewFrame" style="display: none; width: 100%; height: 100vh; border: none;" sandbox="allow-scripts" oncontextmenu="return false;"></iframe>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const previewButton = document.getElementById('previewButton');
+                const previewFrame = document.getElementById('previewFrame');
+                let attemptsLeft = {{ 3|sub:mod_request.customer_preview_count }};
+
+                previewButton.addEventListener('click', function() {
+                    if (attemptsLeft > 0) {
+                        const url = "{% url 'preview_code' thread.id %}?token={{ mod_request.preview_token }}";
+                        previewFrame.src = url;
+                        previewFrame.style.display = 'block';
+                        previewFrame.requestFullscreen().then(() => {
+                            attemptsLeft--;
+                            document.getElementById('attemptsLeft').textContent = `Preview the modified code (Attempts left: ${attemptsLeft}):`;
+                            if (attemptsLeft <= 0) {
+                                previewButton.disabled = true;
+                            }
+                        }).catch(err => {
+                            console.error('Fullscreen failed:', err);
+                            alert('Fullscreen preview failed. Please allow fullscreen in your browser.');
+                        });
+                    }
+                });
+
+                document.addEventListener('fullscreenchange', function() {
+                    if (!document.fullscreenElement) {
+                        previewFrame.style.display = 'none';
+                        previewFrame.src = '';
+                    }
+                });
+            });
+            </script>
+        {% endif %}
+
+        <!-- Customer Download Section -->
+        {% if request.user == thread.customer and mod_request.status == 'completed' %}
+            <p style="color: #E9ECEF; margin: 10px;">Modification completed. Total paid: ₹{{ mod_request.final_price|floatformat:2 }} transferred to developer.</p>
+            <a href="{% url 'download_code' thread.id %}" class="btn btn-primary">Download Code</a>
+        {% endif %}
+
+        <!-- Developer Confirmation After Completion -->
+        {% if request.user == thread.developer and mod_request.status == 'completed' %}
+            <p style="color: #E9ECEF; margin: 10px;">Modification completed. You received ₹{{ mod_request.final_price|floatformat:2 }} in your wallet.</p>
+        {% endif %}
+
+        <!-- Dispute Status -->
+        {% if mod_request.status == 'disputed' %}
+            <p style="color: red; margin: 10px;">This modification request is under dispute: {{ mod_request.dispute_reason }}</p>
+            <p style="color: #E9ECEF; margin: 10px;">Waiting for admin resolution.</p>
+        {% endif %}
+
+        <!-- Refunded Status -->
+        {% if request.user == thread.customer and mod_request.status == 'refunded' %}
+            <p style="color: orange; margin: 10px;">Dispute resolved: You were refunded ₹{{ mod_request.advance_payment|floatformat:2 }}.</p>
+        {% endif %}
+        {% if request.user == thread.developer and mod_request.status == 'refunded' %}
+            <p style="color: orange; margin: 10px;">Dispute resolved: Customer was refunded ₹{{ mod_request.advance_payment|floatformat:2 }}. No payment issued.</p>
+        {% endif %}
+
+        <!-- Closed Status -->
+        {% if request.user == thread.customer and mod_request.status == 'closed' %}
+            <p style="color: orange; margin: 10px;">Dispute resolved: Developer was paid ₹{{ mod_request.final_price|floatformat:2 }}. Thread closed.</p>
+        {% endif %}
+        {% if request.user == thread.developer and mod_request.status == 'closed' %}
+            <p style="color: orange; margin: 10px;">Dispute resolved: You received ₹{{ mod_request.final_price|floatformat:2 }}. Thread closed.</p>
+        {% endif %}
+    </div>
+
+    <!-- Input Area -->
+    {% if thread.is_active %}
+        <div class="whatsapp-input" style="padding: 10px; display: flex; align-items: center; border-top: 1px solid #2A3942;">
+            <form method="post" enctype="multipart/form-data" style="display: flex; width: 100%;">
+                {% csrf_token %}
+                <input type="text" name="message" placeholder="Type a message" style="flex-grow: 1; padding: 10px; border-radius: 20px; border: 2px solid white; background-color: transparent; color:rgb(255, 255, 255); margin-right: 10px;">
+                <input type="file" name="attachment" style="display: none;" id="attachment-input">
+                <label for="attachment-input" style="cursor: pointer; color: #00A884; font-size: 20px; margin-right: 10px;">📎</label>
+                <button class="subscription-badge" type="submit" style="color: #E9ECEF; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">➤</button>
+            </form>
+        </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="container-fluid d-flex justify-content-center align-items-center m-0 p-0">
+  <div class="regestration_form row justify-content-center align-items-center" style="width: 450px; height: 500px;">
+    <div class="re_form-container">
+      <div class="re_form">
+        <form action="" method="POST">
+          <span class="re_heading">LOGIN</span>
+          {% csrf_token %}
+          {{form.username}}
+
+          {{form.password}}
+         
+          {% if form.errors %}
+            <div class="error-card">
+                <span><i class="fa-solid fa-triangle-exclamation" style="padding: 5px;"></i>
+                    <strong>There were errors in your form:</strong>
+                    <p>
+                        {{ form.errors }}
+                    </p>
+                </span>
+            </div>
+          {% endif %}
+          
+          <div class="re_button-container">
+            <button type="submit" class="create">LOGIN</button>
+          </div>
+          </div>
+        </form>
+        <span class="re_c2 p-0 m-0 mt-2">DON'T HAVE AN ACCOUNT? <a class="text-decoration-none" style="color: #caf438;" href="{% url 'signup' %}">SIGN-UP NOW!</a></span>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+{% endblock %}

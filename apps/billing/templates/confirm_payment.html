@@ -1,0 +1,86 @@
+{% extends "base_dash.html" %}
+{% load static %}
+
+{% block title %}Confirm Payment{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<link rel="stylesheet" href="{% static 'css/cart_styles.css' %}">
+
+<div class="confirmation-container p-5">
+    <h2 class="orbitron-header">Checkout</h2>
+    <div class="order-summary p-4 m-5">
+        <h3 class="orbitron-header">Checkout Summary</h3>
+        {% for item in items %}
+            <div class="summary-item mt-4">
+                <span class="orbitron-header">{{ item.name }}</span>
+                <span class="price orbitron-header">₹{{ item.price }}</span>
+            </div>
+            <hr>
+        {% empty %}
+            <p>No items found</p>
+        {% endfor %}
+        <div class="summary-item total-row mb-4">
+            <span class="orbitron-header">Total:</span>
+            <span class="price orbitron-header">₹{{ total_price }}</span>
+        </div>
+    </div>
+
+    <div class="payment-options d-flex justify-content-between align-items-center m-5">
+        <!-- Saved Card Option -->
+        <a href="{% url 'cart' %}" class="modal-btn cancel-btn orbitron-header">Cancel</a>
+
+        {% comment %} <form method="post" action="{% url 'process_payment' %}">
+            {% csrf_token %}
+            <input type="hidden" name="payment_method" value="saved_card">
+            <button type="submit" class="modal-btn confirm-btn">Pay with Saved Card</button>
+        </form>
+        <!-- Razorpay Option --> {% endcomment %}
+        <button class="modal-btn confirm-btn orbitron-header" onclick="initiateRazorpayPayment()">Pay with Razorpay</button>
+    </div>
+
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  function getCSRFToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+  }
+
+  function initiateRazorpayPayment() {
+    fetch("{% url 'rz_initiate' %}", {
+      method: 'POST',
+      headers: { 'X-CSRFToken': getCSRFToken() }
+    })
+    .then(response => response.json())
+    .then(data => {
+      const options = {
+        key: data.key,
+        amount: data.amount,
+        currency: data.currency,
+        order_id: data.order_id,
+        image: "{% static 'images/infinity.png' %}",
+        handler: function(response) {
+          fetch("{% url 'rz_callback' %}", {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': getCSRFToken(),
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(response)
+          })
+          .then(r => r.json())
+          .then(data => {
+            if (data.success) {
+              window.location.href = "{% url 'payment_confirmed' %}";
+            } else {
+              alert('Payment failed: ' + data.error);
+            }
+          });
+        }
+      };
+      new Razorpay(options).open();
+    });
+  }
+</script>
+{% endblock %}

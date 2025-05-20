@@ -1,0 +1,11 @@
+{% extends "errors/error_base.html" %}
+{% block title %}400 - Bad Request{% endblock %}
+{% block content %}
+    <h1 class="error-code">400</h1>
+    <p class="error-message">
+        Malformed request detected. Let's try that again, shall we?
+    </p>
+    <a href="/" class="home-btn">
+        <span>Retry Connection</span>
+    </a>
+{% endblock %}

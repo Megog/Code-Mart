@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Terms & Conditions{% endblock %}
+{% block content %}
+<style>
+  body { background: #000015; color:rgb(239, 20, 255); font-family: 'Orbitron', sans-serif; }
+  .terms-panel {
+    background: rgba(10,0,30,0.6);
+    border-left: 4px solidrgb(235, 20, 255);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 15px hsl(300, 100.00%, 54.10%);
+  }
+  .terms-panel ul { list-style: none; padding: 0; }
+  .terms-panel li {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+  }
+  .terms-panel li::before {
+    content: '✔';
+    position: absolute;
+    left: 0;
+    color:rgb(165, 27, 149);
+    text-shadow: 0 0 5pxrgba(226, 6, 255, 0.65);
+  }
+</style>
+
+<div class="container my-5">
+  <div class="text-center mb-5">
+    <h2 class="fs-1">Terms & Conditions</h2>
+    <p class="text-muted">Navigate your rights in neon clarity.</p>
+  </div>
+  <div class="terms-panel mx-auto col-lg-8">
+    <ul>
+      <li>All digital assets remain property of their creators.</li>
+      <li>No unauthorized redistribution or resale.</li>
+      <li>Developers certify originality of uploads.</li>
+      <li>Violation of policies → account suspension.</li>
+      <li>Terms subject to change; revisit periodically.</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "base_dash.html" %}
+
+{% load static %}
+
+{% block title %}Profile{% endblock  %}
+
+{% block content %}
+<div class="profile-container">
+    <h1 class="subscription-header">Profile</h1>
+    <div class="profile-header">
+        <img src="{{ user.profile_picture.url }}" class="avatar" alt="Profile Picture">
+        <div class="profile-info">
+            <div class="d-flex align-items-center justify-content-between">
+                <h1>{{ user.first_name }} {{ user.last_name }}</h1> &nbsp; &nbsp; &nbsp;
+                <a href="{% url 'update_profile' %}" class="social-icon custom-tooltip" data-tooltip="Edit Profile" style="padding-top: 0;">
+                    <i class="fa-solid fa-pen"></i>
+                </a>
+            </div>
+            <p>@{{ user.username }} &nbsp; &nbsp;
+            <span class="badge {% if user.role == 'developer' %}bg-success{% else %}bg-primary{% endif %}">
+                {{ user.role|title }}
+            </span>
+            </p>
+            
+            <div class="social-links">
+                {% if profile.github_link %}
+                    <a href="{{ profile.github_link }}" class="social-icon custom-tooltip" data-tooltip="GitHub" target="_blank" rel="noopener">
+                        <i class="fab fa-github"></i>
+                    </a>
+                {% else %}
+                    <span class="social-icon disabled custom-tooltip" data-tooltip="GitHub">
+                        <i class="fab fa-github"></i>
+                    </span>
+                {% endif %}
+            
+                {% if profile.linkedIn_link %}
+                    <a href="{{ profile.linkedIn_link }}" class="social-icon custom-tooltip" data-tooltip="LinkedIn" target="_blank" rel="noopener">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                {% else %}
+                    <span class="social-icon disabled custom-tooltip" data-tooltip="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </span>
+                {% endif %}
+            
+                {% if profile.x_link %}
+                    <a href="{{ profile.x_link }}" class="social-icon custom-tooltip" data-tooltip="X-Twitter" target="_blank" rel="noopener">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                {% else %}
+                    <span class="social-icon disabled custom-tooltip" data-tooltip="X-Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </span>
+                {% endif %}
+            
+                {% if profile.instagram_link %}
+                    <a href="{{ profile.instagram_link }}" class="social-icon custom-tooltip" data-tooltip="Instagram" target="_blank" rel="noopener">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                {% else %}
+                    <span class="social-icon disabled custom-tooltip" data-tooltip="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </span>
+                {% endif %}
+
+                {% if profile.website %}
+                    <a href="{{ profile.website }}" class="social-icon custom-tooltip" data-tooltip="My Website" target="_blank" rel="noopener">
+                        <i class="fa-solid fa-globe"></i>
+                    </a>
+                {% else %}
+                    <span class="social-icon disabled custom-tooltip" data-tooltip="My Website">
+                        <i class="fa-solid fa-globe"></i>
+                    </span>
+                {% endif %}
+
+                {% if profile.portfolio_link %}
+                    <a href="{{ profile.portfolio_link }}" class="social-icon custom-tooltip" data-tooltip="My Portfolio" target="_blank" rel="noopener">
+                        <i class="fa-solid fa-address-card"></i>
+                    </a>
+                {% else %}
+                    <span class="social-icon disabled">
+                        <i class="fa-solid fa-address-card custom-tooltip" data-tooltip="My Portfolio"></i>
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="bio-section" style="margin-top: 2rem;">
+        <h2>About Me</h2>
+        {% if profile.bio %}
+            <p>{{ profile.bio }}</p>
+        {% else %}
+            <p>No bio available.</p>
+        {% endif %}
+        <div class="form-row pt-3" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <div class="form-group">
+                <label class="floating-label custom-tooltip" data-tooltip="City">City:
+                {{ profile.city }}</label>
+            </div>
+            <div class="form-group">
+                <label class="floating-label custom-tooltip" data-tooltip="State">State:
+                {{ profile.state }}</label>
+            </div>
+            <div class="form-group">
+                <label class="floating-label custom-tooltip" data-tooltip="Country">Country:
+                {{ profile.country }}</label>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="floating-label custom-tooltip" data-tooltip="Email">Email:
+                {{ user.email }}</label>
+            </div>
+            <div class="form-group">
+                <label class="floating-label custom-tooltip" data-tooltip="Mobile">Mobile:
+                {{ user.mobile }}</label>
+            </div>
+            <div class="form-group">
+            </div>
+        </div>
+
+        <h2 style="margin-top: 1.5rem;">Core Skills</h2>
+        {% for skill in profile.skill_list %}
+            <span class="skill-tag">{{ skill }}</span>
+        {% empty %}
+            <span class="skill-tag">No skills added</span>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="{% static 'js/profileScripts.js' %}"></script>
+{% endblock %}

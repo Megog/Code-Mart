@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ developer.get_full_name|default:developer.username }} - @{{ developer.username }}{% endblock  %}
+
+{% block content %}
+<style>
+/* Dark Artistic Theme */
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+.profile-header {
+  position: relative;
+  height: 240px;
+  background: linear-gradient(135deg, #2c3e50, #4b79a1);
+  overflow: hidden;
+  border-bottom: 2px solid #333;
+}
+.cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6;
+}
+.avatar-wrapper {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid #2c3e50;
+  border-radius: 50%;
+  background-color: #121212;
+}
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.sidebar-card,
+.repo-card {
+  background-color:rgb(50, 50, 50);
+  border: none;
+  color: #e0e0e0;
+}
+.sidebar-card .btn-outline-primary {
+  border-color: #4b79a1;
+  color: #4b79a1;
+}
+.sidebar-card .btn-outline-primary:hover {
+  background-color: #4b79a1;
+  color: #121212;
+}
+.github-tabs .nav-link {
+  color: #e0e0e0;
+}
+.github-tabs .nav-link.active {
+  background-color: #2c3e50;
+  border-color: #4b79a1;
+  color: #fff;
+}
+.repo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+.contrib-heatmap {
+  background: #2c3e50;
+  height: 120px;
+  border-radius: 8px;
+}
+.badge-skill {
+  background-color: #4b79a1;
+  color: #121212;
+}
+</style>
+
+<div class="profile-header align-items-center">
+  <img src="{% static 'images/cover_art.png' %}" class="cover-img" alt="Cover Art" style="z-index: 1;">
+  <div class="avatar-wrapper top-0" style="z-index: 2;">
+    <img src="{{ developer.profile_picture.url }}" class="avatar" style="height: 230px; width: 230px;" alt="{{ developer.username }}">
+  </div>
+</div>
+
+<div class="container mt-5">
+  <div class="row">
+    <!-- Sidebar -->
+    <aside class="col-lg-4 mb-4">
+      <div class="card sidebar-card rounded-4 shadow-sm">
+        <div class="card-body text-center pt-5">
+          <h3 class="mb-1">{{ developer.get_full_name|default:developer.username }}</h3>
+          <p class="text-white">@{{ developer.username }}</p>
+          <p class="bio fst-italic">{{ profile.bio|default:"No bio available." }}</p>
+          <p class="location"><i class="bi bi-geo-alt-fill"></i> {{ profile.city }}, {{ profile.country }}</p>
+          <a href="#" class="btn btn-outline-primary rounded-pill mt-3">Follow</a>
+
+          {% if is_subscribed or request.user.role == 'developer' %}
+          <ul class="list-unstyled social-list mt-4 text-start ps-3">
+            {% if profile.portfolio_link %}<li><i class="bi bi-briefcase-fill me-2"></i><a href="{{ profile.portfolio_link }}" class="text-decoration-none text-light">Portfolio</a></li>{% endif %}
+            {% if profile.website %}<li><i class="bi bi-globe2 me-2"></i><a href="{{ profile.website }}" class="text-decoration-none text-light">Website</a></li>{% endif %}
+            {% if profile.github_link %}<li><i class="bi bi-github me-2"></i><a href="{{ profile.github_link }}" class="text-decoration-none text-light">GitHub</a></li>{% endif %}
+            {% if profile.linkedIn_link %}<li><i class="bi bi-linkedin me-2"></i><a href="{{ profile.linkedIn_link }}" class="text-decoration-none text-light">LinkedIn</a></li>{% endif %}
+            {% if profile.x_link %}<li><i class="bi bi-twitter me-2"></i><a href="{{ profile.x_link }}" class="text-decoration-none text-light">X</a></li>{% endif %}
+            {% if profile.instagram_link %}<li><i class="bi bi-instagram me-2"></i><a href="{{ profile.instagram_link }}" class="text-decoration-none text-light">Instagram</a></li>{% endif %}
+          </ul>
+          {% else %}
+          <div class="mt-4 text-center text-warning">
+            <i class="bi bi-lock-fill me-1"></i> Subscribe to view contact &amp; social links
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="col-lg-8">
+      <!-- Repositories -->
+      <section id="repos">
+        <h5 class="text-light mb-3">Uploads ({{ code_contents.count }})</h5>
+        <div class="row g-4">
+          {% for code in code_contents %}  
+          <div class="col-md-6">
+            <a class="text-decoration-none" href="{% url 'code_detail' code.id %}">
+                <div class="card repo-card rounded-4 shadow-sm h-100">
+                  <div class="card-body p-3">
+                    <h6 class="mb-1">{{ code.title }}</h6>
+                    <p class="small text-secondary mb-2">{{ code.description|truncatewords:12 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <span class="badge badge-skill">{{ code.language|default:"N/A" }}</span>
+                      <small class="text-secondary">Posted on: {{ code.created_at|date:"F j, Y" }}</small>
+                    </div>
+                  </div>
+                </div>
+            </a>
+          </div>
+          {% empty %}
+          <p class="text-secondary">No repositories to display.</p>
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+{% endblock %}

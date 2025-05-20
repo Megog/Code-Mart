@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Category - {{category|capfirst}}{% endblock  %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/code_live_preview_home.css' %}" />
+<link rel="stylesheet" href="{% static 'css/welcomeStyles.css' %}">
+
+<div class="container-fluid m-0 d-flex justify-content-between align-item-center">
+  <div class="m-0 p-0 categories" style="20%">
+    <div class="submenu">
+      <div class="submenu-item text-white orbitron-header">
+        <a href="{% url 'category' 'card' %}" class="submenu-link"><i class="bi bi-card-list"></i>&nbsp;Cards</a>
+      </div>
+      <div class="submenu-item text-white orbitron-header">
+        <a href="{% url 'category' 'checkbox' %}" class="submenu-link"><i class="bi bi-check2-square"></i>&nbsp;Checkbox</a>
+      </div>
+      <div class="submenu-item text-white orbitron-header">
+        <a href="{% url 'category' 'button' %}" class="submenu-link"><i class="bi bi-play-btn"></i>&nbsp;Buttons</a>
+      </div>
+      <div class="submenu-item text-white orbitron-header">
+        <a href="{% url 'category' 'form' %}" class="submenu-link"><i class="bi bi-list-columns-reverse"></i>&nbsp;Form</a>
+      </div>
+      <div class="submenu-item text-white orbitron-header">
+        <a href="{% url 'category' 'toggle' %}" class="submenu-link"><i class="bi bi-toggle-on"></i>&nbsp;Toggle</a>
+      </div>
+      <div class="submenu-item text-white orbitron-header">
+        <a href="{% url 'category' 'input' %}" class="submenu-link"><i class="bi bi-input-cursor-text"></i>&nbsp;Input</a>
+      </div>
+      <div class="submenu-item text-white orbitron-header">
+        <a href="{% url 'category' 'slider' %}" class="submenu-link"><i class="bi bi-sliders"></i>&nbsp;Slider</a>
+      </div>
+      <div class="submenu-item text-white orbitron-header">
+        <a href="{% url 'category' 'dropdown' %}" class="submenu-link"><i class="bi bi-menu-down"></i>&nbsp;Dropdown</a>
+      </div>
+      <div class="submenu-item text-white orbitron-header">
+        <a href="{% url 'category' 'modal' %}" class="submenu-link"><i class="fa-solid fa-hexagon-nodes"></i>&nbsp;Modal</a>
+      </div>
+      <div class="submenu-item text-white orbitron-header">
+        <a href="{% url 'category' 'tabs' %}" class="submenu-link"><i class="bi bi-segmented-nav"></i>&nbsp;Tabs</a>
+      </div>
+      <div class="submenu-item text-white orbitron-header">
+        <a href="{% url 'category' 'alert' %}" class="submenu-link"><i class="bi bi-exclamation-diamond"></i>&nbsp;Alert</a>
+      </div>
+      <div class="submenu-item text-white orbitron-header">
+        <a href="{% url 'category' 'hover' %}" class="submenu-link"><i class="bi bi-cursor-fill"></i>&nbsp;Hover</a>
+      </div>
+      <div class="submenu-item text-white orbitron-header">
+        <a href="{% url 'category' 'responsive' %}" class="submenu-link"><i class="bi bi-square"></i>&nbsp;Responsive</a>
+      </div>
+      <div class="submenu-item text-white orbitron-header">
+        <a href="{% url 'category' 'other' %}" class="submenu-link"><i class="bi bi-motherboard"></i>&nbsp;Others</a>
+      </div>
+    </div>    
+  </div>
+
+  <div class="m-0 p-0" style="width: 80%;">
+    <div class="title">
+      {% if request.resolver_match.url_name == 'explore' %}
+      <h3 class="mb-4">Explore All</h3>
+      <p class="fs-4 mb-4">exclusive content's created with CSS / Tailwind / Bootstrap.</p>
+      {% else %}
+      <h3 class="mb-4">{{category|capfirst}}</h3>
+      <p class="fs-4 mb-4">Explore exclusive {{category}} created with CSS / Tailwind / Bootstrap.</p>
+      {% endif %}
+    </div>
+    
+    <div class="row">
+      {% for code in codes %}
+        <div class="col-md-6 m-0 p-0 d-flex justify-content-center align-item-center">
+          <div class="l-p-card" style="height: 375px;">
+            <div class="l-p-code-editor position-relative group" style="border-radius: 10px; height: 310px;">
+              <pre class="m-0 p-0">
+                <code class="code-preview-iframe d-block">
+                  <iframe id="preview{{ code.id }}" width="100%" height="100%"></iframe>
+                </code>
+              </pre>
+            
+              <!-- Hover Buttons -->
+              <div class="hover-btns position-absolute top-0 end-0 p-2 d-flex" style="opacity: 0; transition: opacity 0.3s; gap: 16rem; top: 15.5rem !important;">
+                <a href="{% url 'initiate_chat' code_id=code.id %}">
+                  <button class="btn btn-light rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    👑
+                  </button>
+                </a>
+                {% if code.price == 0.00 and code.html_code %}
+                <a href="{% url 'code_detail' code.id %}">
+                  <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    &lt;/&gt;
+                  </button>
+                </a>
+                {% else %}
+                <a href="{% url 'code_detail' code.id %}">
+                  <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="bi bi-cart-plus"></i>
+                  </button>
+                </a>
+                {% endif %}
+              </div>
+            </div>
+            <div class="title p-1">
+              <p class="l-p-card-title" style="text-align: right;">@{{ code.developer.username }}</p>
+            </div>
+            
+          </div>
+
+          <script>
+            (function() {
+              const iframe = document.getElementById("preview{{ code.id }}");
+          
+              const html = `{{ code.html_code|escapejs }}`;
+              const css = `{{ code.css_code|escapejs }}`;
+              const js = `{{ code.js_code|escapejs }}`;
+          
+              const finalDoc = `
+              <html>
+                <head>
+                  <style>
+                    html, body {
+                      margin: 0;
+                      padding: 0;
+                      height: 100%;
+                      overflow: auto;
+                      scrollbar-width: none; /* Firefox */
+                    }
+                                
+                    body::-webkit-scrollbar {
+                      display: none; /* Chrome, Safari */
+                    }
+                                
+                    body {
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      min-height: 100vh;
+                    }
+                                
+                    * {
+                      max-width: 100%;
+                      box-sizing: border-box;
+                    }
+                                
+                    img, video, canvas {
+                      max-width: 100%;
+                      height: auto;
+                    }
+                                
+                    ${css}
+                  </style>
+                </head>
+                <body>
+                  ${html}
+                  <script>
+                    ${js}
+                  <\/script>
+                </body>
+              </html>`;
+          
+              iframe.addEventListener("load", () => {
+                const doc = iframe.contentDocument || iframe.contentWindow.document;
+                doc.open();
+                doc.write(finalDoc);
+                doc.close();
+              });
+          
+              iframe.src = "about:blank"; // Trigger the load event
+            })();
+          </script>
+        </div>
+      {% empty %}
+        <p>No content uploaded yet.</p>
+      {% endfor %}
+    </div>
+    <div class="d-flex justify-content-center mt-4">
+      <nav aria-label="Page navigation">
+        <ul class="pagination glassmorphic-pagination">
+          {% if codes.has_previous %}
+            <li class="page-item">
+              <a class="page-link glassmorphic-link" href="?page={{ codes.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">«</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link glassmorphic-link disabled">«</span>
+            </li>
+          {% endif %}
+          
+          {% for num in codes.paginator.page_range %}
+            {% if codes.number == num %}
+              <li class="page-item active"><span class="page-link glassmorphic-link active">{{ num }}</span></li>
+            {% else %}
+              <li class="page-item"><a class="page-link glassmorphic-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+          {% endfor %}
+          
+          {% if codes.has_next %}
+            <li class="page-item">
+              <a class="page-link glassmorphic-link" href="?page={{ codes.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">»</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link glassmorphic-link disabled">»</span>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+{% endblock %}

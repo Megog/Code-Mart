@@ -1,0 +1,9 @@
+{% extends "errors/error_base.html" %}
+{% block title %}403 - Forbidden{% endblock %}
+{% block content %}
+    <h1 class="error-code">403</h1>
+    <p class="error-message">
+        Access level insufficient. Access Denied.
+    </p>
+    <a href="/" class="home-btn">Back To Home</a>
+{% endblock %}

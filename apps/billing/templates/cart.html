@@ -1,0 +1,56 @@
+{% extends "base_dash.html" %}
+{% load static %}
+
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Exo+2:wght@300;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/cart_styles.css' %}">
+
+<div class="cart-container">
+    <div class="cart-header">
+        <h1>CART</h1>
+    </div>
+
+    <div class="cart-items">
+        {% if items %}
+            {% for item in items %}
+                <div class="cart-item">
+                    <iframe srcdoc="{{ item.content_object.html_code|escape }}" width="100px" height="100px" frameborder="0"></iframe>
+                    <div class="item-details">
+                        <h3 class="item-name">{{ item.name }}</h3>
+                        <p class="item-description">{{ item.content_object.description }}</p>
+                        <div class="item-controls">
+                            <a href="{% url 'remove_from_cart' item.cart_id %}">
+                                <span class="remove-item"><i class="fas fa-trash-alt"></i></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="item-price">Price: ₹{{ item.price }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-white">🛒 Your cart is empty.</p>
+        {% endif %}
+    </div>
+
+    <div class="cart-summary">
+        <div class="total-price">TOTAL: ₹{{ total_price }}</div>
+        {% if total_price <= 0 %}
+          <a href="{% url 'confirm_payment' %}" class="checkout-btn">Initiate Checkout</a>
+        {% else %}
+          <a href="{% url 'confirm_payment' %}" class="checkout-btn">Initiate Checkout</a>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+  function getCSRFToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

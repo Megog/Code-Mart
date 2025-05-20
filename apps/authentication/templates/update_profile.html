@@ -1,0 +1,173 @@
+{% extends "base_dash.html" %}
+
+{% load static %}
+
+{% block title %}Update Profile{% endblock  %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/updateProfileStyles.css' %}">
+
+<div class="update-container">
+    <div class="update-header">
+        <h1 style="background: linear-gradient(45deg, #00f3ff, #0066ff);
+                  -webkit-background-clip: text;
+                  -webkit-text-fill-color: transparent;">
+            Update Your Profile
+        </h1>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="update-form">
+        {% csrf_token %}
+        <input type="hidden" id="clear_profile_picture" name="clear_profile_picture" value="false">
+
+        <div class="d-flex justify-content-center align-item-center">
+            <!-- Profile Picture Preview -->
+            <img src="{{ user.profile_picture.url }}" class="avatar-preview" id="avatarPreview">
+        
+        </div>
+        <div class="d-flex justify-content-center align-item-center">
+            <div class="form-group" >
+
+                <div style="display: none;">
+                    {{ user_form.profile_picture }}
+                </div>
+                
+                <div class="">
+                    <input type="file" id="id_profile_picture" name="profile_picture" accept="image/*" hidden>
+            
+                    <label for="id_profile_picture" class="social-icon" style="cursor: pointer;">
+                        <i class="fa-solid fa-pen"></i>
+                    </label>
+                
+                    {% if user.profile_picture %}
+                        <button type="button" class="clear-btn social-icon" onclick="clearProfilePicture()">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>        
+
+        <div class="form-row">
+            <div class="form-group">
+                <label class="floating-label">First Name</label>
+                {{ user_form.first_name }}
+            </div>
+            <div class="form-group">
+                <label class="floating-label">Last Name</label>
+                {{ user_form.last_name }}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label class="floating-label">Email</label>
+                {{ user_form.email }}
+            </div>
+            <div class="form-group">
+                <label class="floating-label">Mobile</label>
+                {{ user_form.mobile }}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label class="floating-label">City</label>
+                {{ profile_form.city }}
+            </div>
+            <div class="form-group">
+                <label class="floating-label">State</label>
+                {{ profile_form.state }}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label class="floating-label">Country</label>
+                {{ profile_form.country }}
+            </div>
+            <div class="form-group">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="floating-label">Bio</label>
+            {{ profile_form.bio }}
+        </div>
+        {% if request.user.role == developer %}
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="floating-label">Skills (comma separated)</label>
+                    {{ profile_form.skills }}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="form-row">
+            <div class="form-group">
+                <label class="floating-label">Website</label>
+                {{ profile_form.website }}
+            </div>
+            <div class="form-group">
+                <label class="floating-label">Portfolio Link</label>
+                {{ profile_form.portfolio_link }}
+            </div>
+        </div>
+
+        <div class="social-section">
+            <h3 style="color: #00f3ff; margin-bottom: 1.5rem;">Social Connections</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <div class="social-input-group">
+                        <i class="fab fa-github social-icon"></i>
+                        {{ profile_form.github_link }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="social-input-group">
+                        <i class="fab fa-linkedin social-icon"></i>
+                        {{ profile_form.linkedIn_link }}
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <div class="social-input-group">
+                        <i class="fab fa-twitter social-icon"></i>
+                        {{ profile_form.x_link }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="social-input-group">
+                        <i class="fab fa-instagram social-icon"></i>
+                        {{ profile_form.instagram_link }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if user_form.errors or profile_form.errors %}
+        <div class="error-card">
+            <span><i class="fa-solid fa-triangle-exclamation" style="padding: 5px;"></i>
+                <strong>There were errors in your form:</strong>
+                <p>
+                    {{ user_form.errors }}
+                    {{ profile_form.errors }}
+                </p>
+            </span>
+        </div>
+        {% endif %}
+        
+  
+  
+
+        <div class="submit-section">
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-wrench"></i> Update Profile
+            </button>
+        </div>
+    </form>
+</div>
+
+<script src="{% static 'js/profileScripts.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}

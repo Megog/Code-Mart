@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}SIGN UP - Create an Account{% endblock %}
+
+{% block content %}
+<div class="container-fluid d-flex justify-content-center align-items-center m-0 p-0">
+  <div class="regestration_form row justify-content-center align-items-center">
+    <div class="re_form-container">
+      <div class="re_form">
+        <form action="" method="POST">
+          <span class="re_heading">CREATE NEW ACCOUNT</span>
+          {% csrf_token %}
+
+          <div class="re_img-container">
+            <div class="prf_img-con">
+              <label for="profilePictureInput" style="cursor: pointer;">
+                <img id="profilePreview" src="{% static 'images/user_default_img.png' %}" alt="Profile Picture Preview">
+              </label>
+          
+              <input type="file" id="profilePictureInput" name="profile_picture" accept="image/*" style="display: none;">
+            </div>
+          </div>
+
+          <div style="display: none;">
+            {{form.role}}
+          </div>
+
+          <div class="r_container mb-3">
+            <div class="radio-wrapper">
+              <input class="input" name="role" id="value-1" type="radio" value="customer">
+              <div class="sbtn">
+                <span aria-hidden=""></span>Customer
+                <span class="btn__glitch" aria-hidden="">Customer</span>
+                <label class="number">SELECT</label>
+              </div>
+            </div>
+            
+            <div class="radio-wrapper">
+              <input class="input" name="role" id="value-2" type="radio" value="developer">
+              <div class="sbtn">
+                Developer<span aria-hidden=""></span>
+                <span class="btn__glitch" aria-hidden="">Developer</span>
+                <label class="number">SELECT</label>
+              </div> 
+            </div>
+          </div>
+
+          {{form.username}}
+
+          <div class="d-flex justify-content-between">
+            {{form.first_name}}
+
+            &nbsp;&nbsp;
+
+            {{form.last_name}}
+          </div>
+          
+          {{form.email}}
+
+          <div class="d-flex justify-content-between">
+            {{form.password1}}
+            
+            &nbsp;&nbsp;
+
+            {{form.password2}}
+          </div>
+          
+          <span class="re_c2">FILL ALL THE REQUIRED FIELDS!</span>
+          {% if form.errors %}
+            <div class="error-card">
+                <span><i class="fa-solid fa-triangle-exclamation" style="padding: 5px;"></i>
+                    <strong>There were errors in your form:</strong>
+                    <p>
+                        {{ form.errors }}
+                    </p>
+                </span>
+            </div>
+          {% endif %}
+          <div class="re_button-container">
+            <button type="submit" class="create">CREATE ACCOUNT</button>
+          </div>
+          </div>
+        </form>
+        <span class="re_c2 p-0 m-0 mt-2">ALREADY HAVE AN ACCOUNT? <a class="text-decoration-none" style="color: #caf438;" href="{% url 'login' %}">LOGIN!</a></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>  
+  //------------------------- Function to Profile picture -----------------------------
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.getElementById("profilePictureInput");
+    const profilePreview = document.getElementById("profilePreview");
+
+    fileInput.addEventListener("change", function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              profilePreview.src = e.target.result;
+          };
+            reader.readAsDataURL(file);
+        }
+    });
+  });
+
+  //---------------------------- Function to handle role selection ------------------------
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const radioInputs = document.querySelectorAll(".input[name='sbtn']");
+    const djangoRoleField = document.querySelector("input[name='role'], select[name='role']");
+
+    function updateRole(selectedValue) {
+        if (djangoRoleField) {
+            djangoRoleField.value = selectedValue; // Update hidden field value
+        }
+    }
+
+    // Add event listeners to radio buttons
+    radioInputs.forEach(input => {
+        input.addEventListener("change", function () {
+            updateRole(this.dataset.value);
+        });
+    });
+  });
+</script>
+
+{% endblock %}

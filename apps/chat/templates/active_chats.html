@@ -1,0 +1,123 @@
+{% extends 'base_dash.html' %}
+
+{% load static %}
+
+{% block title %}Chats{% endblock  %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/order_history_styles.css' %}">
+
+<div class="container">
+    <h1>{% if user_role == 'customer' %}Chat with Developers{% else %}Chat with Customers{% endif %}</h1>
+    {% if request.user.customerprofile.has_subscription %}
+        <h3>Active Chats</h3>
+        {% if active_chats %}
+            <div class="order-list">
+                {% for chat in active_chats %}
+                    <a href="{% url 'chat_view' chat.id %}">
+                        <div class="order-item">
+                            <div class="code-content">
+                                {% if user_role == 'customer' %}
+                                    {{ chat.developer.username|capfirst }}
+                                {% else %}
+                                    {{ chat.customer.username|capfirst }}
+                                {% endif %} : {{ chat.code_content.title|capfirst }}
+                            </div>
+                            <div class="price">{% with latest=chat.messages.last %}
+                                {{ latest.message|truncatechars:60 }} ({{ latest.sent_at|date:"d M Y" }})
+                            {% endwith %}</div>
+                            <div class="subscription-badge">{{ chat.modificationrequest.status|title }}</div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <div class="order-list">
+                <div class="order-item">
+                    <div class="code-content">You don't have any active chats currently.</div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Chat History -->
+        <h3>Chat History</h3>
+        {% if history_chats %}
+            <div class="order-list">
+
+                {% for chat in history_chats %}
+                    <a href="{% url 'chat_view' chat.id %}">
+                        <div class="order-item">
+                            <div class="code-content">
+                                {% if user_role == 'customer' %}
+                                    {{ chat.developer.username|capfirst }}
+                                {% else %}
+                                    {{ chat.customer.username|capfirst }}
+                                {% endif %} : {{ chat.code_content.title|capfirst }}
+                            </div>
+                            <div class="price">
+                                ₹{{ chat.modificationrequest.final_price|floatformat:2 }}&nbsp;&nbsp;&nbsp;
+                                {{ chat.messages.last.sent_at|date:"d M Y" }}
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="order-list">
+                <div class="order-item">
+                    <div class="code-content">You don't have any completed or successful chats yet.</div>
+                </div>
+            </div>
+        
+        {% endif %}
+
+        <!-- Archived Chats -->
+        <h3>Archived Chats</h3>
+        {% if archived_chats %}
+
+            <div class="order-list">
+
+                {% for chat in archived_chats %}
+                    <a href="{% url 'chat_view' chat.id %}">
+                        <div class="order-item">
+                            <div class="code-content">
+                                {% if user_role == 'customer' %}
+                                    {{ chat.developer.username|capfirst }}
+                                {% else %}
+                                    {{ chat.customer.username|capfirst }}
+                                {% endif %} : {{ chat.code_content.title|capfirst }}
+                            </div>
+                            <div class="price">
+                                {{ chat.modificationrequest.status|title }}&nbsp;&nbsp;&nbsp;
+                                {{ chat.messages.last.sent_at|date:"d M Y" }}
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="order-list">
+                <div class="order-item">
+                    <div class="code-content">You don't have any archived chats.</div>
+                </div>
+            </div>
+        
+        {% endif %}
+    {% else %}
+    <div class="d-flex justify-content-center align-items-center m-4">
+        <i class="fa-solid fa-lock fa-2xl" style="color: #FFD43B;"></i>
+    </div>
+    <div class="d-flex justify-content-center align-items-center">
+        <p>You Don't Have any Active Subscription! <a style="color: gold;" href="{% url 'subscription_plans' %}"><b><u>Browse Plans</u></b></a> to Unlock Chat Feature!!!</p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

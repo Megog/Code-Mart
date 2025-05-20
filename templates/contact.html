@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Contact Us{% endblock %}
+{% block content %}
+<style>
+  body { background: #010114; color: #00fff0; font-family: 'Orbitron', sans-serif; }
+  .futuristic-card {
+    background: rgba(0,0,10,0.7);
+    border: 1px solid #00fff0;
+    box-shadow: 0 0 20px #00fff0;
+    border-radius: 1rem;
+  }
+  .input-glow, .textarea-glow {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid #00fff0;
+    box-shadow: inset 0 0 10px #00fff0;
+    color: #fff;
+  }
+  .neon-btn {
+    background: transparent;
+    border: 2px solid #00fff0;
+    color: #00fff0;
+    text-shadow: 0 0 5px #00fff0;
+    transition: 0.2s;
+  }
+  .neon-btn:hover {
+    box-shadow: 0 0 20px #00fff0, 0 0 30px #00fff0;
+    background: rgba(0,255,240,0.1);
+  }
+</style>
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="p-5 futuristic-card">
+        <h2 class="text-center mb-4 fs-1">Contact Hub</h2>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-4">
+            <label class="form-label">Your Name</label>
+            <input type="text" name="name" class="form-control input-glow" required>
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Your Email</label>
+            <input type="email" name="email" class="form-control input-glow" required>
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Message</label>
+            <textarea name="message" rows="5" class="form-control textarea-glow" required></textarea>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn neon-btn btn-lg px-5">SEND</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

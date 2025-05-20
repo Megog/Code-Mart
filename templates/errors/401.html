@@ -1,0 +1,9 @@
+{% extends "errors/error_base.html" %}
+{% block title %}401 - Unauthorized{% endblock %}
+{% block content %}
+    <h1 class="error-code">401</h1>
+    <p class="error-message">
+        Authentication required. Prove you're not a synth.
+    </p>
+    <a href="/" class="home-btn">Access Portal</a>
+{% endblock %}

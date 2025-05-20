@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Privacy Policy{% endblock %}
+{% block content %}
+<style>
+  body { background: #02000a; color:rgb(0, 162, 250); font-family: 'Orbitron', sans-serif; }
+  .privacy-acc {
+    background: rgba(20,0,20,0.7);
+    border: 1px solid rgb(20, 149, 255);
+    border-radius: 0.75rem;
+    box-shadow: 0 0 20px rgb(0, 191, 255);
+  }
+  .accordion-button {
+    background: transparent;
+    color:rgb(20, 184, 255);
+    font-weight: bold;
+    text-shadow: 0 0 5px rgb(20, 165, 255);
+  }
+  .accordion-body { background: rgba(0,0,0,0.6); color: #fff; }
+</style>
+
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h2 class="fs-1">Privacy Protocol</h2>
+    <p class="text-muted">Your data, fortified in neon vaults.</p>
+  </div>
+  <div class="accordion privacy-acc mx-auto col-lg-8" id="privAcc">
+    <div class="accordion-item mb-3">
+      <h2 class="accordion-header" id="phead1">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#pcoll1">
+          What We Collect
+        </button>
+      </h2>
+      <div id="pcoll1" class="accordion-collapse collapse show" data-bs-parent="#privAcc">
+        <div class="accordion-body">
+          Minimal personal info—name, email, preferences—solely to enhance your journey.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item mb-3">
+      <h2 class="accordion-header" id="phead2">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pcoll2">
+          How We Protect
+        </button>
+      </h2>
+      <div id="pcoll2" class="accordion-collapse collapse" data-bs-parent="#privAcc">
+        <div class="accordion-body">
+          End‑to‑end encryption, secure servers, and zero data sharing without consent.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="phead3">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pcoll3">
+          Payment Security
+        </button>
+      </h2>
+      <div id="pcoll3" class="accordion-collapse collapse" data-bs-parent="#privAcc">
+        <div class="accordion-body">
+          All transactions routed through Razorpay & PayPal—no card data stored on our servers.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

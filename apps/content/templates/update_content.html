@@ -1,0 +1,252 @@
+{% extends 'base_dash.html' %}
+
+{% load static %}
+
+{% block title %}Update Content{% endblock  %}
+
+{% block content %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+        }
+
+        .upload-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #7df9ff;
+            font-size: 0.9rem;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .code-input {
+            font-family: 'Courier New', monospace;
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .price-container {
+            position: relative;
+            max-width: 200px;
+        }
+
+        .price-container::before {
+            content: '₹';
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00ffff;
+        }
+
+        #price {
+            padding-left: 25px;
+        }
+
+        .price-wrapper {
+            position: relative;
+        }
+        
+        .price-wrapper .currency-symbol {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00ffff;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+        
+        .price-wrapper input {
+            padding-left: 30px !important;
+            width: 49%;
+        }        
+
+        .image-upload {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload:hover {
+            border-color: #00ffff;
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .tags-hint {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.5rem;
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #00ffff, #0066ff);
+            color: #fff;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .upload-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+    <div class="upload-container mt-5 mb-5">
+        <h1>Update Content</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {{ form.title.errors }}
+            {{ form.description.errors }}
+            {{ form.html_code.errors }}
+            {{ form.css_code.errors }}
+            {{ form.js_code.errors }}
+            {{ form.price.errors }}
+            {{ form.image_preview.errors }}
+            {{ form.category.errors }}
+            {{ form.difficulty.errors }}
+            {{ form.tags.errors }}
+            <div class="form-group">
+                <label for="title">Project Title</label>
+                {{ form.title }}
+            </div>
+
+            <div class="form-group">
+                <label for="description">Project Description</label>
+                {{ form.description }}
+            </div>
+
+            <div class="form-group">
+                <label>HTML Code Components</label>
+                <div class="code-columns">
+                    {{ form.html_code }}
+                </div>
+                <label>CSS Code Components</label>
+                <div class="code-columns">
+                    {{ form.css_code }}
+                </div>
+                <label>JS Code Components</label>
+                <div class="code-columns">
+                    {{ form.js_code }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="price">Price</label>
+                <div class="price-wrapper">
+                    <span class="currency-symbol">₹</span>
+                    {{ form.price }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Current Image Preview</label>
+                {% if form.instance.image_preview %}
+                    <div style="margin-bottom: 10px;">
+                        <img src="{{ form.instance.image_preview.url }}" alt="Current Preview" style="max-width: 100%; border-radius: 10px; box-shadow: 0 0 10px rgba(0,255,255,0.3);">
+                    </div>
+                {% else %}
+                    <p style="color: #aaa;">No preview image available</p>
+                {% endif %}
+            
+                <label>Change Image</label>
+                <div class="image-upload">
+                    <div style="display: none;">
+                        {{ form.image_preview }}
+                    </div>
+                    <label for="id_image_preview" style="cursor: pointer;">Choose New File</label>
+                    <span id="fileName">No file chosen</span>
+                </div>
+            </div>
+            
+
+            <div class="d-flex justify-content-between align-item-center">
+
+                <div class="form-group" style="width: 49%;">
+                    <label for="category">Category</label>
+                    {{ form.category }}
+                </div>
+            
+                <div class="form-group" style="width: 49%;">
+                    <label for="difficulty">Difficulty</label>
+                    {{ form.difficulty }}
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Upload Project</button>
+        </form>
+    </div>
+
+    <script>
+        const imageInput = document.getElementById('id_image_preview');
+        const fileNameSpan = document.getElementById('fileName');
+        
+        if (imageInput) {
+            imageInput.addEventListener('change', function(e) {
+                const fileName = e.target.files.length > 0 ? e.target.files[0].name : "No file chosen";
+                fileNameSpan.textContent = fileName;
+            });
+        }
+    </script>
+{% endblock  %}

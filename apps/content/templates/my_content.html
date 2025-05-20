@@ -1,0 +1,318 @@
+{% extends "base_dash.html" %}
+
+{% load static %}
+
+{% block title %}My Contents{% endblock  %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: #fff;
+    }
+</style>
+
+<link rel="stylesheet" href="{% static 'css/code_live_preview_home.css' %}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-DQvkBjpPgn7RC31MCQoOeC9TI2kdqa4+BSgNMNj8v77fdC77Kj5zpWFTJaaAoMbC" crossorigin="anonymous">
+<div class="container mt-4">
+    <h2 class="mb-4 text-white">My Contents</h2>
+
+    {% comment %} <div class="row">
+        {% for code in codes %}
+        <div class="col-md-4 mb-5 d-flex justify-content-center align-item-center">            
+            <div class="l-p-card">
+                    <div class="l-p-card-header">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="mac-header">
+                              <span class="red"></span>
+                              <span class="yellow"></span>
+                              <span class="green"></span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <a href="{% url 'code_detail' code.id %}"><span class="l-p-card-tag ps-2 pe-2 ms-2" style="background-color: green;">View</span></a>
+                                <a href="{% url 'update_content' code.id %}"><span class="l-p-card-tag ps-2 pe-2 ms-2" style="background-color: blue;">Edit</span></a>
+                                <a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ code.pk }}">
+                                    <span class="l-p-card-tag ps-2 pe-2 ms-2" style="background-color: red;">Delete</span>
+                                </a>
+                            </div>
+                        </div>
+                        <span class="l-p-card-title">{{ code.title }} by @{{ code.developer.username }}</span>
+                        </span>
+                        <p class="l-p-card-description">
+                            {{ code.description|truncatechars:80 }}
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="l-p-card-tag">Category: {{ code.get_category_display }}</span><br>
+                                <span class="l-p-card-tag">Difficulity: {{ code.get_difficulty_display }}</span>
+                            </div>
+                            <div>
+                                <span class="l-p-card-tag">Tags: {{ code.tags }}</span><br>
+                                <span class="l-p-card-tag">Is Paid: {% if code.price == 0.00 %}Free{% else %}₹{{ code.price }}{% endif %}</span>
+                            </div>
+                        </div>
+                    </div>
+                <div class="l-p-code-editor">
+                  <pre><code>
+                    <iframe id="preview{{ code.id }}" width="auto" height="auto" ></iframe>
+                  </code></pre>
+                </div>
+                <span class="l-p-card-tag">Uploaded on {{ code.created_at|date:"F j, Y" }}</span>
+                <span class="l-p-card-tag">Last updated {{ code.updated_at|date:"F j, Y" }}</span>
+            </div>
+
+            <script>
+                (function() {
+                    const iframe = document.getElementById("preview{{ code.id }}");
+                
+                    const html = `{{ code.html_code|escapejs }}`;
+                    const css = `{{ code.css_code|escapejs }}`;
+                    const js = `{{ code.js_code|escapejs }}`;
+                
+                    const finalDoc = `
+                    <html>
+                      <head>
+                        <style>
+                          html, body {
+                            margin: 0;
+                            padding: 0;
+                            height: 100%;
+                            overflow: auto;
+                            scrollbar-width: none; /* Firefox */
+                          }
+                                      
+                          body::-webkit-scrollbar {
+                            display: none; /* Chrome, Safari */
+                          }
+                                      
+                          body {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            min-height: 100vh;
+                          }
+                                      
+                          * {
+                            max-width: 100%;
+                            box-sizing: border-box;
+                          }
+                                      
+                          img, video, canvas {
+                            max-width: 100%;
+                            height: auto;
+                          }
+                                      
+                          ${css}
+                        </style>
+                      </head>
+                      <body>
+                        ${html}
+                        <script>
+                          ${js}
+                        <\/script>
+                      </body>
+                    </html>`;
+                
+                    iframe.addEventListener("load", () => {
+                      const doc = iframe.contentDocument || iframe.contentWindow.document;
+                      doc.open();
+                      doc.write(finalDoc);
+                      doc.close();
+                    });
+                
+                    iframe.src = "about:blank"; // Trigger the load event
+                  })();
+              </script>
+        </div>
+
+        // --------------------------------Confirm Delete Modal------------------------
+        <div class="modal fade" id="deleteModal{{ code.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ code.pk }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel{{ code.pk }}">Confirm Deletion</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete <strong>{{ code.title }}</strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <form method="POST" action="{% url 'delete_content' code.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No content uploaded yet.</p>
+        {% endfor %}
+    </div> {% endcomment %}
+    <div class="row">
+      {% for code in codes %}
+        <div class="col-md-6 m-0 p-0 d-flex justify-content-center align-item-center">
+          <div class="l-p-card" style="height: 375px;">
+            <div class="l-p-code-editor position-relative group" style="border-radius: 10px; height: 310px;">
+              <pre class="m-0 p-0">
+                <code class="code-preview-iframe d-block">
+                  <iframe id="preview{{ code.id }}" width="100%" height="100%"></iframe>
+                </code>
+              </pre>
+            
+              <!-- Hover Buttons -->
+              <div class="hover-btns position-absolute top-0 end-0 p-2 d-flex" style="opacity: 0; transition: opacity 0.3s; gap: 16rem;">
+                <!--Delete Content-->
+                <button class="btn btn-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;" data-bs-toggle="modal" data-bs-target="#deleteModal{{ code.pk }}">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+              <div class="hover-btns position-absolute top-0 end-0 p-2 d-flex" style="opacity: 0; transition: opacity 0.3s; gap: 16rem; top: 15.5rem !important;">
+                <!--Update Content-->
+                <a href="{% url 'update_content' code.id %}">
+                  <button class="btn btn-light rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="fa-solid fa-pen-nib"></i>
+                  </button>
+                </a>
+                <!--Code Detail-->
+                <a href="{% url 'code_detail' code.id %}">
+                  <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    &lt;/&gt;
+                  </button>
+                </a>
+              </div>
+            </div>
+            <div class="title p-1">
+              <p class="l-p-card-title" style="text-align: right;">@{{ code.developer.username }}</p>
+            </div>
+            
+          </div>
+
+          <script>
+            (function() {
+              const iframe = document.getElementById("preview{{ code.id }}");
+          
+              const html = `{{ code.html_code|escapejs }}`;
+              const css = `{{ code.css_code|escapejs }}`;
+              const js = `{{ code.js_code|escapejs }}`;
+          
+              const finalDoc = `
+              <html>
+                <head>
+                  <style>
+                    html, body {
+                      margin: 0;
+                      padding: 0;
+                      height: 100%;
+                      overflow: auto;
+                      scrollbar-width: none; /* Firefox */
+                    }
+                                
+                    body::-webkit-scrollbar {
+                      display: none; /* Chrome, Safari */
+                    }
+                                
+                    body {
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      min-height: 100vh;
+                    }
+                                
+                    * {
+                      max-width: 100%;
+                      box-sizing: border-box;
+                    }
+                                
+                    img, video, canvas {
+                      max-width: 100%;
+                      height: auto;
+                    }
+                                
+                    ${css}
+                  </style>
+                </head>
+                <body>
+                  ${html}
+                  <script>
+                    ${js}
+                  <\/script>
+                </body>
+              </html>`;
+          
+              iframe.addEventListener("load", () => {
+                const doc = iframe.contentDocument || iframe.contentWindow.document;
+                doc.open();
+                doc.write(finalDoc);
+                doc.close();
+              });
+          
+              iframe.src = "about:blank"; // Trigger the load event
+            })();
+          </script>
+        </div>
+        <div class="modal fade" id="deleteModal{{ code.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ code.pk }}" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content bg-dark text-white">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="deleteModalLabel{{ code.pk }}">Confirm Deletion</h5>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      Are you sure you want to delete <strong>{{ code.title }}</strong>?
+                  </div>
+                  <div class="modal-footer">
+                      <form method="POST" action="{% url 'delete_content' code.pk %}">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                      </form>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  </div>
+              </div>
+          </div>
+        </div>
+      {% empty %}
+        <p>No content uploaded yet.</p>
+      {% endfor %}
+    </div>
+    <div class="d-flex justify-content-center mt-4">
+      <nav aria-label="Page navigation">
+        <ul class="pagination glassmorphic-pagination">
+          {% if codes.has_previous %}
+            <li class="page-item">
+              <a class="page-link glassmorphic-link" href="?page={{ codes.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">«</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link glassmorphic-link disabled">«</span>
+            </li>
+          {% endif %}
+          
+          {% for num in codes.paginator.page_range %}
+            {% if codes.number == num %}
+              <li class="page-item active"><span class="page-link glassmorphic-link active">{{ num }}</span></li>
+            {% else %}
+              <li class="page-item"><a class="page-link glassmorphic-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+          {% endfor %}
+          
+          {% if codes.has_next %}
+            <li class="page-item">
+              <a class="page-link glassmorphic-link" href="?page={{ codes.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">»</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link glassmorphic-link disabled">»</span>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+</div>
+
+{% endblock %}

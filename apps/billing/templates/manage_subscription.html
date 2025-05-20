@@ -1,0 +1,186 @@
+{% extends "base_dash.html" %}
+
+{% load static %}
+
+{% block title %}Manage Subscription{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #0a1a2a 0%, #0a0a3a 100%);
+        color: #fff;
+        min-height: 100vh;
+    }
+
+    .subscription-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+    }
+
+    .subscription-header {
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+        background: linear-gradient(45deg, #00ff9d, #00b4ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        text-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
+    }
+
+    .subscription-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        border-radius: 15px;
+        padding: 2rem;
+        border: 1px solid rgba(0, 180, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 2rem;
+        box-shadow: 0 0 30px rgba(0, 180, 255, 0.1);
+    }
+
+    .subscription-tier {
+        font-size: 1.8rem;
+        color: #00ff9d;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        text-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+    }
+
+    .subscription-description {
+        color: #a0dfff;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+        font-size: 1.1rem;
+    }
+
+    .subscription-dates {
+        display: grid;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .date-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: rgba(0, 50, 100, 0.3);
+        border-radius: 10px;
+        border: 1px solid rgba(0, 180, 255, 0.1);
+    }
+
+    .date-label {
+        color: #88d8ff;
+    }
+
+    .date-value {
+        color: #00b4ff;
+        font-weight: 500;
+    }
+
+    .status-badge {
+        background: linear-gradient(45deg, #00b4ff, #0066ff);
+        padding: 0.5rem 1.5rem;
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+        font-weight: bold;
+        box-shadow: 0 0 15px rgba(0, 180, 255, 0.2);
+    }
+
+    .manage-button {
+        background: linear-gradient(45deg, #00ff9d, #00b4ff);
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 30px;
+        color: #002635;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1.5rem;
+        width: 100%;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .manage-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px rgba(0, 255, 157, 0.3);
+    }
+
+    .price-highlight {
+        color: #00ff9d;
+        font-size: 2rem;
+        margin: 1rem 0;
+        text-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
+    }
+
+    footer {
+        margin-top: 3rem;
+        text-align: center;
+        color: #88aaff;
+        font-size: 0.9rem;
+    }
+
+    footer a {
+        color: #88aaff;
+        text-decoration: none;
+        margin: 0 0.5rem;
+        transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+        color: #00ff9d;
+    }
+</style>
+
+<div class="subscription-container">
+    <h1 class="subscription-header">
+        Manage Subscription
+    </h1>
+
+    <div class="subscription-card">
+      {% if subscription %}
+        <div class="subscription-tier">{{ subscription.plan.name }}</div>
+        <div class="price-highlight">₹{{ subscription.plan.price }}</div>
+        
+        <div class="subscription-description">
+          {{ subscription.plan.description }}
+        </div>
+
+        <div class="subscription-dates">
+            <div class="date-item">
+                <span class="date-label">Start Date:</span>
+                <span class="date-value">{{ subscription.start_date|date:"F j, Y, g:i a" }}</p></span>
+            </div>
+            <div class="date-item">
+                <span class="date-label">End Date:</span>
+                <span class="date-value">{{ subscription.end_date|date:"F j, Y, g:i a" }}</span>
+            </div>
+        </div>
+        {% if subscription.is_active %}
+          <div class="status-badge">
+            Status: Active <span style="font-size: 1.2rem;">✅</span>
+          </div>
+        {% else %}
+          <div class="status-badge">
+            Status: Expired <span style="font-size: 1.2rem;">❌</span>
+          </div>
+        {% endif %}
+        
+        <button class="manage-button">
+            Manage Subscription
+        </button>
+      {% else %}
+        <div class="subscription-description">
+          You do not have an active subscription. <a href="{% url 'subscription_plans' %}">Browse Plans</a>
+        </div>
+      {% endif %}
+    </div>
+</div>
+{% endblock %}

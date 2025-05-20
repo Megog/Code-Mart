@@ -1,0 +1,45 @@
+{% extends "base_dash.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Payment Confirmed{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/cart_styles.css' %}">
+
+<div class="confirmation-container p-5">
+    <h2 class="orbitron-header">Payment Confirmed!!!</h2>
+    <div class="order-summary p-4 m-5">
+        <h3 class="orbitron-header">Order Details</h3>
+        {% for order in orders %}
+            <div class="summary-item mt-4 mb-4">
+                <span class="orbitron-header">
+                    {{ order.content_object.name }}
+                    {{ order.content_object.title }}
+                </span>
+                <span class="price orbitron-header">₹{{ order.price }}</span>
+            </div>
+            {% if order.content_type.model == 'codecontent' %}
+                <div class="downloads mb-4">
+                    {% if order.content_object.html_code %}
+                        <a class="modal-btn confirm-btn orbitron-header" href="data:text/html;base64,{{ order.content_object.html_code|encode_base64 }}" download="{{ order.content_object.title }}_template.html">Download HTML</a>
+                    {% endif %}
+                    {% if order.content_object.css_code %}
+                        <a class="modal-btn confirm-btn orbitron-header" href="data:text/css;base64,{{ order.content_object.css_code|encode_base64 }}" download="{{ order.content_object.title }}_styles.css">Download CSS</a>
+                    {% endif %}
+                    {% if order.content_object.js_code %}
+                        <a class="modal-btn confirm-btn orbitron-header" href="data:text/javascript;base64,{{ order.content_object.js_code|encode_base64 }}" download="{{ order.content_object.title }}_script.js">Download JS</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% empty %}
+            <p class="orbitron-header">No items found</p>
+        {% endfor %}
+        <hr>
+        <div class="summary-item total-row mb-5">
+            <span class="orbitron-header">Total Paid:</span>
+            <span class="price orbitron-header">₹{{ total_price }}</span>
+        </div>
+    </div>
+    <a href="{% url 'home' %}" class="modal-btn cancel-btn orbitron-header m-5">Back to Home</a>
+</div>
+{% endblock %}
