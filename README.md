@@ -1,4 +1,4 @@
-# Code Mart
+# Digital Content Marketplace
 
 A Django-based platform ("CodeMart") where developers can upload, showcase, and sell digital content (code snippets, designs, articles) and customers can browse, preview, purchase, and communicate with developers.
 
@@ -6,111 +6,110 @@ A Django-based platform ("CodeMart") where developers can upload, showcase, and 
 
 ## Features
 
-**Role-Based Access**: _Separate Developer and Customer signups with custom dashboards._
+* **Role-Based Access**: Separate **Developer** and **Customer** signup with custom dashboards.
+* **Content Upload**: Developers add content with metadata (title, description, price, tags, category).
+* **Live Preview**: In-browser preview of HTML/CSS/JS content without exposing source code.
+* **Shopping Cart**: Add multiple items (content & subscriptions) and manage in-cart items.
+* **Secure Checkout**: Integration with **Razorpay** for seamless payments.
+* **Subscription Plans**: Customers subscribe to unlock chat access; developers chat for free.
+* **Messaging**: Secure one-on-one chat for custom requests, negotiations, and support.
+* **Admin Panel**: Manage users, content, subscriptions, and handle disputes.
 
-**Content Upload**: _Developers add content with metadata (title, description, price, tags, category)._
-
-**Live Preview**: _In-browser preview of HTML/CSS/JS content without exposing source code._
-
-**Shopping Cart**: _Add multiple items (content & subscriptions) and manage in-cart items._
-
-**Secure Checkout**: _Integration with Razorpay and PayPal for seamless payments._
-
-**Subscription Plans**: _Customers subscribe to unlock chat access; developers chat for free._
-
-**Messaging**: _Secure one-on-one chat for custom requests, negotiations, and support._
-
-**Admin Panel**: _Manage users, content, subscriptions, and handle disputes._
+---
 
 ## Tech Stack
 
-**Backend**: _Python, Django_
+* **Backend**: Python, Django
+* **Frontend**: HTML5, Bootstrap, CSS3, JavaScript
+* **Database**: MySQL
+* **Payments**: Razorpay
 
-**Frontend**: _HTML5, Bootstrap, CSS3, JavaScript_
-
-**Database**: _MySQL_
-
-**Payments**: _Razorpay, PayPal_
+---
 
 ## Installation & Setup
 
-### Clone the repo:
+1. **Clone the repo**:
 
-_git clone https://github.com/Chaurasiavipul98/Code-Mart.git
-cd code-mart_
+   ```bash
+   git clone https://github.com/chaurasiavipul98/code-mart.git
+   cd code-mart
+   ```
 
-### Create & activate virtualenv:
+2. **Create & activate virtualenv**:
 
-_python3 -m venv venv
-source venv/bin/activate_
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
 
-### Install dependencies:
+3. **Install dependencies**:
 
-_pip install -r requirements.txt_
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### Configure environment variables:
+4. **Configure environment variables**:
 
-#### Create a .env file in the project root with:
+   * Create a `.env` file in the project root with:
 
-_SECRET_KEY=your_django_secret_key_
+     ```env
+     SECRET_KEY=your_django_secret_key
+     DEBUG=True
+     DB_NAME=your_mysql_db
+     DB_USER=mysql_user
+     DB_PASSWORD=mysql_password
+     RAZORPAY_KEY=your_key
+     RAZORPAY_SECRET=your_secret
+     ```
 
-_DEBUG=True_
+5. **Run migrations & collect static files**:
 
-_DB_NAME=your_mysql_db_
+   ```bash
+   python manage.py migrate
+   python manage.py collectstatic
+   ```
 
-_DB_USER=mysql_user_
+6. **Run the development server**:
 
-_DB_PASSWORD=mysql_password_
+   ```bash
+   python manage.py runserver
+   ```
 
-_RAZORPAY_KEY=your_key_
+Visit `http://127.0.0.1:8000/` in your browser.
 
-_RAZORPAY_SECRET=your_secret_
-
-### Run migrations & collect static files:
-
-_python manage.py migrate
-python manage.py collectstatic_
-
-### Run the development server:
-
-_python manage.py runserver_
-
-_Visit http://127.0.0.1:8000/ in your browser._
+---
 
 ## Usage
 
-**Sign up as a Developer or Customer.**
+* **Sign up** as Developer or Customer.
+* Developers upload content under the "Marketplace" tab.
+* Customers browse and preview content; add items or subscriptions to the cart.
+* Complete payment via Razorpay or PayPal.
+* Subscribed customers can chat with developers via the "Messages" page.
+* Admin can manage users, content, and disputes via Django admin.
 
-**Developers upload content under the "Marketplace" tab.**
-
-**Customers browse and preview content, add items or subscriptions to the cart.**
-
-**Complete payment via Razorpay or PayPal.**
-
-**Subscribed customers can chat with developers via the "Messages" page.**
-
-**Admin can manage users, content, and disputes via Django admin.**
+---
 
 ## Contributing
 
-**Fork the repository.**
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature/new-feature`).
+3. Commit your changes (`git commit -m "Add new feature"`).
+4. Push to branch (`git push origin feature/new-feature`).
+5. Submit a Pull Request.
 
-**Create a feature branch (git checkout -b feature/new-feature).**
-
-**Commit your changes (git commit -m "Add new feature").**
-
-**Push to branch (git push origin feature/new-feature).**
-
-### Could you submit a Pull Request?
+---
 
 ## License
 
-### _This project is licensed under the MIT License. See the LICENSE file for details._
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## Contact - For questions or feedback, reach out to:
+---
 
-### Vipul Chaurasia (Developer)
+## Contact
 
-#### Email: _chaurasiavipul98@gmail.com_
+For questions or feedback, reach out to:
 
-#### LinkedIn: _linkedin.com/in/vipulchaurasia_
+* **Vipul Chaurasia** (Developer)
+* Email: [chaurasiavipul98@gmail.com](mailto:chaurasiavipul98@gmail.com)
+* LinkedIn: [linkedin.com/in/vipulchaurasia](https://linkedin.com/in/vipulchaurasia)
