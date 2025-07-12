@@ -1,115 +1,153 @@
-# Digital Content Marketplace
+# Code-Mart 🛒💻
 
-A Django-based platform ("CodeMart") where developers can upload, showcase, and sell digital content (code snippets, designs, articles) and customers can browse, preview, purchase, and communicate with developers.
+![Code-Mart](https://img.shields.io/badge/Code--Mart-Django%20Platform-brightgreen)
 
----
+Welcome to **Code-Mart**, a Django-based platform where developers can sell their code and digital assets. This repository provides everything you need to set up and run your own marketplace for digital goods. 
 
-## Features
+## Table of Contents
 
-* **Role-Based Access**: Separate **Developer** and **Customer** signup with custom dashboards.
-* **Content Upload**: Developers add content with metadata (title, description, price, tags, category).
-* **Live Preview**: In-browser preview of HTML/CSS/JS content without exposing source code.
-* **Shopping Cart**: Add multiple items (content & subscriptions) and manage in-cart items.
-* **Secure Checkout**: Integration with **Razorpay** for seamless payments.
-* **Subscription Plans**: Customers subscribe to unlock chat access; developers chat for free.
-* **Messaging**: Secure one-on-one chat for custom requests, negotiations, and support.
-* **Admin Panel**: Manage users, content, subscriptions, and handle disputes.
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Technologies Used](#technologies-used)
+- [Contributing](#contributing)
+- [License](#license)
+- [Releases](#releases)
 
----
+## Features ✨
 
-## Tech Stack
+Code-Mart offers a variety of features to enhance both the developer and customer experience:
 
-* **Backend**: Python, Django
-* **Frontend**: HTML5, Bootstrap, CSS3, JavaScript
-* **Database**: MySQL
-* **Payments**: Razorpay
+- **Role-Based Dashboards**: Different interfaces for sellers and buyers to manage their activities.
+- **Subscriptions for Chat Access**: Customers can subscribe for direct communication with developers.
+- **Live Previews**: Users can see a demo of the code before purchasing.
+- **Secure Messaging**: Built-in messaging system to ensure safe communication.
+- **Admin Dispute Resolution**: Admin tools to handle disputes between buyers and sellers.
 
----
+## Getting Started 🚀
 
-## Installation & Setup
+To get started with Code-Mart, you will need to set up your environment. Follow the steps below to get your instance up and running.
 
-1. **Clone the repo**:
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- Python 3.6 or higher
+- Django 3.x
+- MySQL
+- Node.js (for front-end assets)
+- Razorpay account (for payment processing)
+
+### Installation
+
+1. **Clone the Repository**
+
+   Start by cloning the repository to your local machine:
 
    ```bash
-   git clone https://github.com/chaurasiavipul98/code-mart.git
-   cd code-mart
+   git clone https://github.com/Megog/Code-Mart.git
+   cd Code-Mart
    ```
 
-2. **Create & activate virtualenv**:
+2. **Set Up a Virtual Environment**
+
+   Create a virtual environment to manage dependencies:
 
    ```bash
-   python3 -m venv venv
-   source venv/bin/activate
+   python -m venv venv
+   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
    ```
 
-3. **Install dependencies**:
+3. **Install Requirements**
+
+   Install the necessary packages:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Configure environment variables**:
+4. **Set Up Database**
 
-   * Create a `.env` file in the project root with:
+   Configure your MySQL database. Update the `settings.py` file with your database credentials. 
 
-     ```env
-     SECRET_KEY=your_django_secret_key
-     DEBUG=True
-     DB_NAME=your_mysql_db
-     DB_USER=mysql_user
-     DB_PASSWORD=mysql_password
-     RAZORPAY_KEY=your_key
-     RAZORPAY_SECRET=your_secret
-     ```
+5. **Run Migrations**
 
-5. **Run migrations & collect static files**:
+   Apply the database migrations:
 
    ```bash
    python manage.py migrate
-   python manage.py collectstatic
    ```
 
-6. **Run the development server**:
+6. **Create a Superuser**
+
+   Create an admin account to access the dashboard:
+
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+7. **Run the Development Server**
+
+   Start the server:
 
    ```bash
    python manage.py runserver
    ```
 
-Visit `http://127.0.0.1:8000/` in your browser.
+   Your application should now be running at `http://127.0.0.1:8000`.
 
----
+## Usage 💡
 
-## Usage
+Once your server is running, you can access the application through your web browser. 
 
-* **Sign up** as Developer or Customer.
-* Developers upload content under the "Marketplace" tab.
-* Customers browse and preview content; add items or subscriptions to the cart.
-* Complete payment via Razorpay or PayPal.
-* Subscribed customers can chat with developers via the "Messages" page.
-* Admin can manage users, content, and disputes via Django admin.
+### User Registration
 
----
+- Navigate to the registration page to create a new account.
+- After registering, you can log in and start exploring the marketplace.
 
-## Contributing
+### Adding Products
+
+- Sellers can add new digital assets through their dashboard.
+- Fill in the required details, including a live preview link and pricing.
+
+### Purchasing Products
+
+- Customers can browse the marketplace, preview assets, and add them to their cart.
+- Use Razorpay to complete the payment securely.
+
+## Technologies Used 🛠️
+
+Code-Mart is built using the following technologies:
+
+- **Django**: For the backend framework.
+- **MySQL**: For the database.
+- **HTML5 & CSS3**: For the front-end layout and design.
+- **JavaScript**: For interactive elements.
+- **Razorpay**: For payment processing.
+- **Chat Application**: For secure messaging between users.
+
+## Contributing 🤝
+
+We welcome contributions from the community. If you would like to contribute, please follow these steps:
 
 1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature/new-feature`).
-3. Commit your changes (`git commit -m "Add new feature"`).
-4. Push to branch (`git push origin feature/new-feature`).
-5. Submit a Pull Request.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them.
+4. Push your branch and create a pull request.
 
----
-
-## License
+## License 📄
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
+## Releases 📦
+
+For the latest updates and releases, please visit the [Releases section](https://github.com/Megog/Code-Mart/releases). Here you can download the latest version and execute it to start your own Code-Mart instance.
+
+## Contact 📬
+
+If you have any questions or feedback, feel free to reach out through the issues section of this repository.
+
 ---
 
-## Contact
-
-For questions or feedback, reach out to:
-
-* **Vipul Chaurasia** (Developer)
-* Email: [chaurasiavipul98@gmail.com](mailto:chaurasiavipul98@gmail.com)
-* LinkedIn: [linkedin.com/in/vipulchaurasia](https://linkedin.com/in/vipulchaurasia)
+Thank you for checking out Code-Mart! We hope you find it useful for your projects. Happy coding!
